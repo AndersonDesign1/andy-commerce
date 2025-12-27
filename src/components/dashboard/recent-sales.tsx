@@ -48,26 +48,36 @@ const recentSalesData = [
 
 export function RecentSales() {
   return (
-    <div className="space-y-7">
+    <div className="space-y-1">
       {recentSalesData.map((sale) => (
-        <div key={sale.email} className="flex items-center group justify-between">
-          <div className="flex items-center gap-4">
-             <Avatar className="h-9 w-9 border border-border/40 sm:h-9 sm:w-9">
-                <AvatarImage alt={sale.name} src={sale.avatar} />
-                <AvatarFallback className="text-[10px] text-muted-foreground bg-muted/30">{sale.initials}</AvatarFallback>
-             </Avatar>
-             <div className="space-y-1">
-                <p className="font-medium text-sm leading-none text-foreground tracking-tight">{sale.name}</p>
-                <p className="text-muted-foreground text-xs font-normal">
-                {sale.email}
-                </p>
-             </div>
+        <div
+          className="group -mx-3 flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-surface-2"
+          key={sale.email}
+        >
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 border border-border/30">
+              <AvatarImage alt={sale.name} src={sale.avatar} />
+              <AvatarFallback className="bg-surface-2 font-medium text-muted-foreground text-xs">
+                {sale.initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-0.5">
+              <p className="font-medium text-foreground text-sm leading-none">
+                {sale.name}
+              </p>
+              <p className="text-muted-foreground text-xs">{sale.email}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium tabular-nums text-foreground">{sale.amount}</span>
+          <div className="flex items-center gap-3">
+            <span className="font-semibold text-sm text-success-600 tabular-nums dark:text-success-500">
+              {sale.amount}
+            </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="h-7 w-7 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100 ring-offset-background focus-visible:ring-1 focus-visible:ring-ring" variant="ghost">
+                <Button
+                  className="h-7 w-7 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
+                  variant="ghost"
+                >
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
                 </Button>

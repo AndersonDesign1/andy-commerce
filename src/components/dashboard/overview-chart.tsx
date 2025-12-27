@@ -11,100 +11,90 @@ import {
 } from "recharts";
 
 const data = [
-  { name: "Jan", total: 2400 },
-  { name: "Feb", total: 1398 },
-  { name: "Mar", total: 9800 },
-  { name: "Apr", total: 3908 },
-  { name: "May", total: 4800 },
-  { name: "Jun", total: 3800 },
-  { name: "Jul", total: 4300 },
-  { name: "Aug", total: 6000 },
-  { name: "Sep", total: 5500 },
-  { name: "Oct", total: 7000 },
-  { name: "Nov", total: 6500 },
-  { name: "Dec", total: 8500 },
+  { name: "Jan", total: 12_000 },
+  { name: "Feb", total: 15_000 },
+  { name: "Mar", total: 18_000 },
+  { name: "Apr", total: 22_000 },
+  { name: "May", total: 28_000 },
+  { name: "Jun", total: 32_000 },
+  { name: "Jul", total: 39_952 },
+  { name: "Aug", total: 42_000 },
+  { name: "Sep", total: 48_000 },
+  { name: "Oct", total: 55_000 },
+  { name: "Nov", total: 62_000 },
+  { name: "Dec", total: 72_000 },
 ];
 
 export function OverviewChart() {
   return (
-    <ResponsiveContainer height={350} width="100%">
-      <AreaChart data={data}>
+    <ResponsiveContainer height={220} width="100%">
+      <AreaChart
+        data={data}
+        margin={{ top: 5, right: 5, left: -25, bottom: 0 }}
+      >
         <defs>
-          <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.15} />
-            <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+          <linearGradient id="colorTotal" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="var(--gray-400)" stopOpacity={0.15} />
+            <stop offset="100%" stopColor="var(--gray-400)" stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid
+          stroke="var(--gray-200)"
           strokeDasharray="3 3"
+          strokeOpacity={0.6}
           vertical={false}
-          stroke="var(--foreground)"
-          opacity={0.06}
         />
         <XAxis
-          dataKey="name"
-          stroke="var(--muted-foreground)"
-          fontSize={10}
-          tickLine={false}
           axisLine={false}
-          tickMargin={15}
-          fontWeight={500}
+          dataKey="name"
+          fontSize={10}
+          fontWeight={400}
+          stroke="var(--gray-400)"
+          tickLine={false}
+          tickMargin={8}
         />
         <YAxis
-          stroke="var(--muted-foreground)"
-          fontSize={10}
-          tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `$${value}`}
-          fontWeight={500}
+          fontSize={10}
+          fontWeight={400}
+          stroke="var(--gray-400)"
+          tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
+          tickLine={false}
           width={40}
         />
         <Tooltip
-            content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                return (
-                    <div className="rounded-lg bg-foreground text-background px-3 py-1.5 shadow-xl">
-                        <span className="font-bold font-mono text-xs">
-                            ${payload[0].value?.toLocaleString()}
-                        </span>
-                    </div>
-                );
-                }
-                return null;
-            }}
-            cursor={{
-                stroke: "var(--foreground)",
-                strokeWidth: 1,
-                strokeDasharray: "4 4",
-                opacity: 0.2
-            }}
-        />
-        <Area
-          type="monotone"
-          dataKey="total"
-          stroke="var(--primary)"
-          strokeWidth={2.5}
-          fillOpacity={1}
-          fill="url(#colorTotal)"
-          activeDot={{
-            r: 4,
-            strokeWidth: 0,
-            fill: "var(--primary)",
-            className: "animate-ping" // Optional: adds a pulse effect if tailwind animate is set, otherwise just a solid dot
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              return (
+                <div className="rounded-md border border-gray-800 bg-gray-900 px-2.5 py-1.5 shadow-lg dark:border-gray-200 dark:bg-gray-100">
+                  <span className="font-semibold text-gray-50 text-xs tabular-nums dark:text-gray-900">
+                    ${payload[0].value?.toLocaleString()}
+                  </span>
+                </div>
+              );
+            }
+            return null;
+          }}
+          cursor={{
+            stroke: "var(--gray-400)",
+            strokeWidth: 1,
+            strokeDasharray: "4 4",
+            opacity: 0.5,
           }}
         />
-        {/* Secondary Halo Dot for visual polish (static on top of activeDot) */}
         <Area
-             type="monotone"
-             dataKey="total"
-             stroke="none"
-             fill="none"
-             activeDot={{
-                 r: 6,
-                 stroke: "var(--background)",
-                 strokeWidth: 2,
-                 fill: "var(--primary)"
-             }}
+          activeDot={{
+            r: 4,
+            strokeWidth: 2,
+            stroke: "var(--surface-1)",
+            fill: "var(--gray-900)",
+          }}
+          dataKey="total"
+          fill="url(#colorTotal)"
+          fillOpacity={1}
+          stroke="var(--gray-900)"
+          strokeWidth={1.5}
+          type="monotone"
         />
       </AreaChart>
     </ResponsiveContainer>

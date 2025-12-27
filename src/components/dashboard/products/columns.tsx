@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type DashboardProduct = {
+export interface DashboardProduct {
   id: string;
   name: string;
   status: "active" | "draft" | "archived";
@@ -23,7 +23,13 @@ export type DashboardProduct = {
   inventory: number;
   sales: number;
   image: string;
-};
+}
+
+const statusVariantMap = {
+  active: "success",
+  draft: "secondary",
+  archived: "secondary",
+} as const;
 
 export const columns: ColumnDef<DashboardProduct>[] = [
   {
@@ -56,7 +62,7 @@ export const columns: ColumnDef<DashboardProduct>[] = [
     cell: ({ row }) => {
       const image = row.getValue("image") as string;
       return (
-        <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-border/50 bg-muted/50">
+        <div className="relative h-10 w-10 overflow-hidden rounded-lg border border-border/40 bg-surface-2">
           {image ? (
             <Image
               alt={row.getValue("name")}
@@ -65,7 +71,7 @@ export const columns: ColumnDef<DashboardProduct>[] = [
               src={image}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-muted-foreground/40 text-xs font-medium uppercase tracking-wider">
+            <div className="flex h-full w-full items-center justify-center font-semibold text-[10px] text-muted-foreground/50 uppercase tracking-wider">
               Img
             </div>
           )}
@@ -78,28 +84,30 @@ export const columns: ColumnDef<DashboardProduct>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="-ml-3 h-8 text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          className="-ml-3 h-8 font-semibold text-muted-foreground text-xs uppercase tracking-wider hover:text-foreground"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           variant="ghost"
         >
           Name
-          <ArrowUpDown className="ml-2 h-3 w-3" />
+          <ArrowUpDown className="ml-1.5 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="font-medium text-foreground text-sm">{row.getValue("name")}</div>
+      <div className="font-medium text-foreground text-sm">
+        {row.getValue("name")}
+      </div>
     ),
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+      const status = row.getValue("status") as keyof typeof statusVariantMap;
       return (
         <Badge
-          className="capitalize font-normal text-xs px-2 py-0.5"
-          variant={status === "active" ? "default" : "secondary"}
+          className="text-xs capitalize"
+          variant={statusVariantMap[status]}
         >
           {status}
         </Badge>
@@ -108,21 +116,27 @@ export const columns: ColumnDef<DashboardProduct>[] = [
   },
   {
     accessorKey: "price",
-    header: () => <div className="text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">Price</div>,
+    header: () => <div className="text-right">Price</div>,
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue("price"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(amount);
-      return <div className="text-right font-medium tabular-nums text-foreground">{formatted}</div>;
+      return (
+        <div className="text-right font-semibold text-foreground tabular-nums">
+          {formatted}
+        </div>
+      );
     },
   },
   {
     accessorKey: "inventory",
-    header: () => <div className="text-right text-xs font-medium uppercase tracking-wider text-muted-foreground">Inventory</div>,
+    header: () => <div className="text-right">Inventory</div>,
     cell: ({ row }) => (
-      <div className="text-right tabular-nums text-muted-foreground">{row.getValue("inventory")}</div>
+      <div className="text-right text-muted-foreground tabular-nums">
+        {row.getValue("inventory")}
+      </div>
     ),
   },
   {
@@ -130,43 +144,51 @@ export const columns: ColumnDef<DashboardProduct>[] = [
     header: ({ column }) => {
       return (
         <Button
-          className="w-full justify-end px-0 hover:bg-transparent text-xs font-medium uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          className="w-full justify-end px-0 font-semibold text-muted-foreground text-xs uppercase tracking-wider hover:bg-transparent hover:text-foreground"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           variant="ghost"
         >
           Sales
-          <ArrowUpDown className="ml-2 h-3 w-3" />
+          <ArrowUpDown className="ml-1.5 h-3 w-3" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="text-right tabular-nums text-muted-foreground">{row.getValue("sales")}</div>
+      <div className="text-right text-muted-foreground tabular-nums">
+        {row.getValue("sales")}
+      </div>
     ),
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original;
+      const product = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0 hover:bg-muted/50" variant="ghost">
+            <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel className="font-normal text-xs text-muted-foreground">Actions</DropdownMenuLabel>
+            <DropdownMenuLabel className="font-normal text-muted-foreground text-xs">
+              Actions
+            </DropdownMenuLabel>
             <DropdownMenuItem
               className="text-sm"
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
               Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-sm">View details</DropdownMenuItem>
-            <DropdownMenuItem className="text-sm">Edit product</DropdownMenuItem>
+            <DropdownMenuItem className="text-sm">
+              View details
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-sm">
+              Edit product
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

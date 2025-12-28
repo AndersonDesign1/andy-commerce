@@ -43,7 +43,7 @@ const FOOTER_ITEMS = [
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (

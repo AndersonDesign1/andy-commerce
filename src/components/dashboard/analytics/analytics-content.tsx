@@ -11,7 +11,7 @@ import {
 import { TopPagesTable } from "@/components/dashboard/analytics/top-pages-table";
 import { TrafficSourcesCard } from "@/components/dashboard/analytics/traffic-sources-card";
 import { WebVisitsCard } from "@/components/dashboard/analytics/web-visits-card";
-import { MetricCard } from "@/components/dashboard/shared/metric-card";
+import { MetricCard } from "@/components/shared/metric-card";
 import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import type { AnalyticsData } from "@/lib/data";

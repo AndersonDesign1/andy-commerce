@@ -11,8 +11,8 @@ import { CustomerDetail } from "@/components/dashboard/customers/customer-detail
 import { CustomerLTVCard } from "@/components/dashboard/customers/customer-ltv-card";
 import { CustomerSegmentsCard } from "@/components/dashboard/customers/customer-segments-card";
 import { DataTable } from "@/components/dashboard/products/data-table";
-import { MetricCard } from "@/components/dashboard/shared/metric-card";
-import { TableToolbar } from "@/components/dashboard/shared/table-toolbar";
+import { MetricCard } from "@/components/shared/metric-card";
+import { TableToolbar } from "@/components/shared/table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import type { CustomersData } from "@/lib/data";

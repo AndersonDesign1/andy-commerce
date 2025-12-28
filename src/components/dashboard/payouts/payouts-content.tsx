@@ -13,12 +13,12 @@ import { useState } from "react";
 import { MonthlyEarningsCard } from "@/components/dashboard/payouts/monthly-earnings-card";
 import { PaymentMethodsCard } from "@/components/dashboard/payouts/payment-methods-card";
 import { TransactionDetail } from "@/components/dashboard/payouts/transaction-detail";
-import { MetricCard } from "@/components/dashboard/shared/metric-card";
+import { MetricCard } from "@/components/shared/metric-card";
 import {
   type StatusType,
   statusConfig,
-} from "@/components/dashboard/shared/status-config";
-import { TableToolbar } from "@/components/dashboard/shared/table-toolbar";
+} from "@/components/shared/status-config";
+import { TableToolbar } from "@/components/shared/table-toolbar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

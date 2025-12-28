@@ -1,6 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { NotificationDropdown } from "@/components/header/notification-dropdown";
-import { ProfileMenu } from "@/components/header/profile-menu";
+import { NotificationDropdown } from "@/components/dashboard/notification-dropdown";
+import { ProfileMenu } from "@/components/dashboard/profile-menu";
+import { DashboardSidebar } from "@/components/dashboard/sidebar";
 import {
   SidebarInset,
   SidebarProvider,
@@ -16,7 +16,7 @@ export default function DashboardLayout({
   return (
     <NotificationsProvider>
       <SidebarProvider>
-        <AppSidebar />
+        <DashboardSidebar />
         <SidebarInset>
           {/* Top Header Bar */}
           <header className="flex h-14 items-center justify-between border-border/30 border-b bg-surface-1 px-4">

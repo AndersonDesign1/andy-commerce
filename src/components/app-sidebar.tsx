@@ -38,8 +38,8 @@ const NAV_ITEMS = [
 ];
 
 const FOOTER_ITEMS = [
-  { href: "#", label: "Help Center", icon: HelpCircle },
-  { href: "#", label: "Feedback", icon: MessageSquare },
+  { href: "/dashboard/help", label: "Help Center", icon: HelpCircle },
+  { href: "/dashboard/feedback", label: "Feedback", icon: MessageSquare },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

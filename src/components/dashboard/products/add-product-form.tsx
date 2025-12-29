@@ -68,51 +68,56 @@ export function AddProductForm() {
   };
 
   return (
-    <form className="space-y-8" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Link
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-50"
             href="/dashboard/products"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <h1 className="font-semibold text-2xl text-gray-900">
+            <h1 className="font-semibold text-gray-900 text-xl sm:text-2xl">
               Add New Product
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="hidden text-gray-500 text-sm sm:block">
               Create a new digital product to sell
             </p>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           <Button
-            className="border-gray-200"
+            className="flex-1 border-gray-200 sm:flex-none"
             disabled={isSavingDraft}
             onClick={handleSaveDraft}
+            size="sm"
             type="button"
             variant="outline"
           >
             {isSavingDraft ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "Save as Draft"
+              "Save Draft"
             )}
           </Button>
           <Button
-            className="gap-2 bg-gray-900 text-white hover:bg-gray-800"
+            className="flex-1 gap-2 bg-gray-900 text-white hover:bg-gray-800 sm:flex-none"
             disabled={isSubmitting}
+            size="sm"
             type="submit"
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Publishing...
+                <span className="hidden sm:inline">Publishing...</span>
               </>
             ) : (
-              "Publish Product"
+              <>
+                <span className="sm:hidden">Publish</span>
+                <span className="hidden sm:inline">Publish Product</span>
+              </>
             )}
           </Button>
         </div>

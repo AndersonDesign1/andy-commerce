@@ -9,7 +9,7 @@ interface OAuthButtonsProps {
 
 export function OAuthButtons({ isLoading }: OAuthButtonsProps) {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <Button
         className="h-11 gap-2 border-gray-200 bg-white text-gray-700 hover:bg-gray-50"
         disabled={isLoading}

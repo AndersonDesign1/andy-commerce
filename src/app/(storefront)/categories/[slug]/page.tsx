@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { ArrowLeft, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -83,7 +84,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const { addItem, isInCart } = useCart();
 
   // Get category info
-  const resolvedParams = await params;
+  const resolvedParams = use(params);
   const category = CATEGORY_INFO[resolvedParams.slug] || {
     name: "Category",
     icon: "📦",

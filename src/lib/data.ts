@@ -146,3 +146,35 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
 export async function getPayoutsData(): Promise<PayoutsData> {
   return await readDataFile<PayoutsData>("payouts.json");
 }
+
+export async function getCategoriesInfo(): Promise<
+  Record<string, { name: string; icon: string }>
+> {
+  return await readDataFile<Record<string, { name: string; icon: string }>>(
+    "categories.json"
+  );
+}
+
+export async function getCategoryProducts(): Promise<
+  Array<{
+    id: string;
+    name: string;
+    price: number;
+    originalPrice: number | null;
+    rating: number;
+    sales: number;
+    seller: string;
+  }>
+> {
+  return await readDataFile<
+    Array<{
+      id: string;
+      name: string;
+      price: number;
+      originalPrice: number | null;
+      rating: number;
+      sales: number;
+      seller: string;
+    }>
+  >("category-products.json");
+}

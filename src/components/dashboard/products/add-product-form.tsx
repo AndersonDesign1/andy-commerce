@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,12 +32,25 @@ export function AddProductForm() {
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [files, setFiles] = useState<string[]>([]);
+  const submitTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const draftTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (submitTimerRef.current) {
+        clearTimeout(submitTimerRef.current);
+      }
+      if (draftTimerRef.current) {
+        clearTimeout(draftTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     // TODO: Implement actual product creation
-    setTimeout(() => {
+    submitTimerRef.current = setTimeout(() => {
       setIsSubmitting(false);
       toast.success("Product published successfully");
       router.push("/dashboard/products");
@@ -47,7 +60,7 @@ export function AddProductForm() {
   const handleSaveDraft = () => {
     setIsSavingDraft(true);
     // TODO: Implement save as draft
-    setTimeout(() => {
+    draftTimerRef.current = setTimeout(() => {
       setIsSavingDraft(false);
       toast.success("Draft saved");
     }, 1000);
@@ -209,8 +222,8 @@ export function AddProductForm() {
 
             {coverImage ? (
               <div className="relative aspect-video overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
-                <div className="flex h-full items-center justify-center text-gray-400">
-                  <span className="text-6xl">🖼️</span>
+                <div className="flex h-full items-center justify-center text-gray-300">
+                  <ImageIcon className="h-12 w-12" />
                 </div>
                 <button
                   className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md"
@@ -374,7 +387,7 @@ export function AddProductForm() {
               <div className="aspect-video overflow-hidden rounded-lg bg-gray-100">
                 {coverImage ? (
                   <div className="flex h-full items-center justify-center text-gray-400">
-                    <span className="text-4xl">🖼️</span>
+                    <ImageIcon className="h-8 w-8" />
                   </div>
                 ) : (
                   <div className="flex h-full items-center justify-center text-gray-300">

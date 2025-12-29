@@ -8,7 +8,6 @@ import { useCart } from "@/contexts/cart-context";
 
 const PLATFORM_FEE_RATE = 0.05;
 
-
 export default function CartPage() {
   const { items, removeItem, totalPrice, clearCart } = useCart();
 
@@ -108,7 +107,9 @@ export default function CartPage() {
               <span className="text-gray-900">${totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Platform fee ({PLATFORM_FEE_RATE * 100}%)</span>
+              <span className="text-gray-500">
+                Platform fee ({PLATFORM_FEE_RATE * 100}%)
+              </span>
               <span className="text-gray-900">
                 ${(totalPrice * PLATFORM_FEE_RATE).toFixed(2)}
               </span>

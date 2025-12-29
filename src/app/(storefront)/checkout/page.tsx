@@ -160,7 +160,9 @@ export default function CheckoutPage() {
               <span>${totalPrice.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Platform fee ({PLATFORM_FEE_RATE * 100}%)</span>
+              <span className="text-gray-500">
+                Platform fee ({PLATFORM_FEE_RATE * 100}%)
+              </span>
               <span>${(totalPrice * PLATFORM_FEE_RATE).toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold">

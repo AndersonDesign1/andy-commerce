@@ -1,8 +1,8 @@
 "use client";
 
-import { Search, ShoppingCart, Star } from "lucide-react";
+import { Box, Search, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -71,6 +71,16 @@ function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
   const { addItem, isInCart } = useCart();
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const q = formData.get("q");
+    if (typeof q === "string") {
+      router.push(`/search?q=${encodeURIComponent(q)}`);
+    }
+  };
 
   const results = query
     ? ALL_PRODUCTS.filter(
@@ -85,7 +95,7 @@ function SearchResults() {
     <div className="mx-auto max-w-6xl px-6 py-12">
       {/* Search Header */}
       <div className="mb-8">
-        <form action="/search" className="mx-auto max-w-xl">
+        <form className="mx-auto max-w-xl" onSubmit={handleSearch}>
           <div className="relative">
             <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <Input
@@ -126,7 +136,7 @@ function SearchResults() {
               <Link href={`/products/${product.id}`}>
                 <div className="aspect-[4/3] bg-gray-100">
                   <div className="flex h-full items-center justify-center text-gray-400 transition-transform group-hover:scale-105">
-                    <span className="text-5xl">📦</span>
+                    <Box className="h-12 w-12" />
                   </div>
                 </div>
               </Link>

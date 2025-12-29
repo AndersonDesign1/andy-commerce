@@ -109,14 +109,14 @@ export function Hero() {
                     className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4"
                     key={metric.label}
                   >
-                    <p className="truncate text-xs text-gray-500">
+                    <p className="truncate text-gray-500 text-xs">
                       {metric.label}
                     </p>
                     <div className="mt-1 flex flex-col items-baseline justify-between sm:flex-row">
                       <p className="font-bold text-base text-gray-900 sm:text-xl">
                         {metric.value}
                       </p>
-                      <span className="font-medium text-xs text-green-600">
+                      <span className="font-medium text-green-600 text-xs">
                         {metric.change}
                       </span>
                     </div>

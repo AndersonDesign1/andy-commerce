@@ -1,80 +1,20 @@
 "use client";
 
-import { use } from "react";
 import { ArrowLeft, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useCart } from "@/contexts/cart-context";
 
-// Mock products for category
-const CATEGORY_INFO: Record<string, { name: string; icon: string }> = {
-  templates: { name: "Templates", icon: "📄" },
-  "ui-kits": { name: "UI Kits", icon: "🎨" },
-  icons: { name: "Icons", icon: "✨" },
-  fonts: { name: "Fonts", icon: "🔤" },
-  illustrations: { name: "Illustrations", icon: "🖼️" },
-  photos: { name: "Photos", icon: "📷" },
-  courses: { name: "Courses", icon: "🎓" },
-  ebooks: { name: "eBooks", icon: "📚" },
-};
+import CATEGORY_INFO_DATA from "@/data/categories.json";
+import PRODUCTS_DATA from "@/data/category-products.json";
 
-const PRODUCTS = [
-  {
-    id: "1",
-    name: "Ultimate Design System",
-    price: 49,
-    originalPrice: 99,
-    rating: 4.9,
-    sales: 1234,
-    seller: "Design Studio",
-  },
-  {
-    id: "2",
-    name: "Dashboard UI Kit",
-    price: 39,
-    originalPrice: 79,
-    rating: 4.8,
-    sales: 890,
-    seller: "Creative Assets",
-  },
-  {
-    id: "3",
-    name: "Mobile App Templates",
-    price: 29,
-    originalPrice: 59,
-    rating: 4.7,
-    sales: 567,
-    seller: "App Studio",
-  },
-  {
-    id: "4",
-    name: "Icon Pack Pro",
-    price: 19,
-    originalPrice: 39,
-    rating: 4.9,
-    sales: 2100,
-    seller: "Icon Foundry",
-  },
-  {
-    id: "5",
-    name: "Landing Page Kit",
-    price: 34,
-    originalPrice: 69,
-    rating: 4.6,
-    sales: 445,
-    seller: "Template Hub",
-  },
-  {
-    id: "6",
-    name: "Dark Mode Components",
-    price: 44,
-    originalPrice: 89,
-    rating: 4.8,
-    sales: 678,
-    seller: "UI Designers",
-  },
-];
+const CATEGORY_INFO = CATEGORY_INFO_DATA as Record<
+  string,
+  { name: string; icon: string }
+>;
+const PRODUCTS = PRODUCTS_DATA;
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
@@ -103,7 +43,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
       {/* Header */}
       <div className="mb-8">
-        <div className="mb-2 text-4xl">{category.icon}</div>
+        <div aria-hidden="true" className="mb-2 text-4xl">
+          {category.icon}
+        </div>
         <h1 className="mb-2 font-bold text-3xl text-gray-900">
           {category.name}
         </h1>
@@ -118,7 +60,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <Link href={`/products/${product.id}`}>
               <div className="aspect-[4/3] bg-gray-100">
                 <div className="flex h-full items-center justify-center text-gray-400 transition-transform group-hover:scale-105">
-                  <span className="text-5xl">{category.icon}</span>
+                  <span aria-hidden="true" className="text-5xl">
+                    {category.icon}
+                  </span>
                 </div>
               </div>
             </Link>

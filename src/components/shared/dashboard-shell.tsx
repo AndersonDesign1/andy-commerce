@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { NotificationDropdown } from "@/components/header/notification-dropdown";
-import { ProfileMenu } from "@/components/header/profile-menu";
+import { NotificationDropdown } from "@/components/dashboard/notification-dropdown";
+import { ProfileMenu } from "@/components/dashboard/profile-menu";
 import {
   SidebarInset,
   SidebarProvider,

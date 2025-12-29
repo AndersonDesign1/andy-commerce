@@ -4,8 +4,14 @@ import { cn } from "@/lib/utils";
 interface MetricCardProps {
   title: string;
   value: string | number;
+  // Legacy props
   change?: string;
   changeType?: "positive" | "negative" | "neutral";
+  // New props from data
+  subtext?: string;
+  trend?: string;
+  trendUp?: boolean;
+  primary?: boolean;
   icon?: LucideIcon;
   className?: string;
 }
@@ -15,13 +21,26 @@ export function MetricCard({
   value,
   change,
   changeType = "neutral",
+  subtext,
+  trend,
+  trendUp,
+  primary,
   icon: Icon,
   className,
 }: MetricCardProps) {
+  // Use trend/trendUp if provided, otherwise fall back to change/changeType
+  const displayChange = trend || change;
+  const displayChangeType = trend
+    ? trendUp
+      ? "positive"
+      : "negative"
+    : changeType;
+
   return (
     <div
       className={cn(
         "rounded-xl border border-gray-200 bg-white p-5",
+        primary && "border-primary/20 bg-primary/5",
         className
       )}
     >
@@ -31,17 +50,20 @@ export function MetricCard({
           <p className="mt-2 font-bold text-2xl text-gray-900 tabular-nums">
             {value}
           </p>
-          {change && (
+          {displayChange && (
             <p
               className={cn(
                 "mt-1 text-sm",
-                changeType === "positive" && "text-emerald-600",
-                changeType === "negative" && "text-red-600",
-                changeType === "neutral" && "text-gray-500"
+                displayChangeType === "positive" && "text-emerald-600",
+                displayChangeType === "negative" && "text-red-600",
+                displayChangeType === "neutral" && "text-gray-500"
               )}
             >
-              {change}
+              {displayChange}
             </p>
+          )}
+          {subtext && (
+            <p className="mt-0.5 text-gray-400 text-xs">{subtext}</p>
           )}
         </div>
         {Icon && (

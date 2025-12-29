@@ -7,7 +7,11 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardShell sidebar={<AdminSidebar />} title="Admin Panel">
+    <DashboardShell
+      searchRole="admin"
+      sidebar={<AdminSidebar />}
+      title="Admin Panel"
+    >
       {children}
     </DashboardShell>
   );

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "name": "Ultimate Design System",
+    "price": 49,
+    "originalPrice": 99,
+    "rating": 4.9,
+    "sales": 1234,
+    "seller": "Design Studio"
+  },
+  {
+    "id": "2",
+    "name": "Dashboard UI Kit",
+    "price": 39,
+    "originalPrice": 79,
+    "rating": 4.8,
+    "sales": 890,
+    "seller": "Creative Assets"
+  },
+  {
+    "id": "3",
+    "name": "Mobile App Templates",
+    "price": 29,
+    "originalPrice": 59,
+    "rating": 4.7,
+    "sales": 567,
+    "seller": "App Studio"
+  },
+  {
+    "id": "4",
+    "name": "Icon Pack Pro",
+    "price": 19,
+    "originalPrice": 39,
+    "rating": 4.9,
+    "sales": 2100,
+    "seller": "Icon Foundry"
+  },
+  {
+    "id": "5",
+    "name": "Landing Page Kit",
+    "price": 34,
+    "originalPrice": 69,
+    "rating": 4.6,
+    "sales": 445,
+    "seller": "Template Hub"
+  },
+  {
+    "id": "6",
+    "name": "Dark Mode Components",
+    "price": 44,
+    "originalPrice": 89,
+    "rating": 4.8,
+    "sales": 678,
+    "seller": "UI Designers"
+  }
+]

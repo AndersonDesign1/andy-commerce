@@ -21,12 +21,12 @@ export function ProductsContent({ products }: ProductsContentProps) {
   const selectedProduct = products.find((p) => p.id === selectedId);
 
   return (
-    <div className="flex h-full flex-1 flex-col space-y-6">
+    <div className="flex h-full flex-1 flex-col space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-semibold text-foreground text-lg">Products</h2>
-          <p className="text-muted-foreground text-sm">
+          <p className="hidden text-muted-foreground text-sm sm:block">
             Manage your product catalog.
           </p>
         </div>
@@ -36,13 +36,14 @@ export function ProductsContent({ products }: ProductsContentProps) {
             href="/dashboard/products/new"
           >
             <Plus className="h-4 w-4" />
-            Add Product
+            <span className="hidden sm:inline">Add Product</span>
+            <span className="sm:hidden">Add</span>
           </Link>
         </Button>
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden pt-1 pl-1">
         <DataTable
           columns={columns}
           data={products}

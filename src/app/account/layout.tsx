@@ -7,7 +7,11 @@ export default function AccountLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardShell sidebar={<AccountSidebar />} title="My Account">
+    <DashboardShell
+      searchRole="user"
+      sidebar={<AccountSidebar />}
+      title="My Account"
+    >
       {children}
     </DashboardShell>
   );

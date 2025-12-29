@@ -1,0 +1,10 @@
+{
+  "templates": { "name": "Templates", "icon": "📄" },
+  "ui-kits": { "name": "UI Kits", "icon": "🎨" },
+  "icons": { "name": "Icons", "icon": "✨" },
+  "fonts": { "name": "Fonts", "icon": "🔤" },
+  "illustrations": { "name": "Illustrations", "icon": "🖼️" },
+  "photos": { "name": "Photos", "icon": "📷" },
+  "courses": { "name": "Courses", "icon": "🎓" },
+  "ebooks": { "name": "eBooks", "icon": "📚" }
+}

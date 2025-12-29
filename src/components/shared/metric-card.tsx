@@ -30,11 +30,13 @@ export function MetricCard({
 }: MetricCardProps) {
   // Use trend/trendUp if provided, otherwise fall back to change/changeType
   const displayChange = trend || change;
-  const displayChangeType = trend
-    ? trendUp
-      ? "positive"
-      : "negative"
-    : changeType;
+  const getDisplayChangeType = () => {
+    if (trend) {
+      return trendUp ? "positive" : "negative";
+    }
+    return changeType;
+  };
+  const displayChangeType = getDisplayChangeType();
 
   return (
     <div
@@ -62,9 +64,7 @@ export function MetricCard({
               {displayChange}
             </p>
           )}
-          {subtext && (
-            <p className="mt-0.5 text-gray-400 text-xs">{subtext}</p>
-          )}
+          {subtext && <p className="mt-0.5 text-gray-400 text-xs">{subtext}</p>}
         </div>
         {Icon && (
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100">

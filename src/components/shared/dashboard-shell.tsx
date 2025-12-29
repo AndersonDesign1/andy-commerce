@@ -1,24 +1,55 @@
+"use client";
+
+import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { NotificationDropdown } from "@/components/dashboard/notification-dropdown";
 import { ProfileMenu } from "@/components/dashboard/profile-menu";
+import {
+  CommandPalette,
+  type SearchRole,
+} from "@/components/shared/command-palette";
+import { Button } from "@/components/ui/button";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { CartProvider, useCart } from "@/contexts/cart-context";
 import { NotificationsProvider } from "@/contexts/notifications-context";
+
+function CartButton() {
+  const { totalItems } = useCart();
+
+  return (
+    <Button asChild className="relative" size="icon" variant="ghost">
+      <Link href="/cart">
+        <ShoppingCart className="h-5 w-5" />
+        {totalItems > 0 && (
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground text-xs">
+            {totalItems > 9 ? "9+" : totalItems}
+          </span>
+        )}
+      </Link>
+    </Button>
+  );
+}
 
 interface DashboardShellProps {
   children: ReactNode;
   sidebar: ReactNode;
   title: string;
+  searchRole?: SearchRole;
 }
 
-export function DashboardShell({
+function DashboardContent({
   children,
   sidebar,
   title,
+  searchRole = "seller",
 }: DashboardShellProps) {
+  const isUser = searchRole === "user";
+
   return (
     <NotificationsProvider>
       <SidebarProvider>
@@ -33,6 +64,20 @@ export function DashboardShell({
               </h1>
             </div>
             <div className="flex items-center gap-2">
+              {/* Command Palette Search */}
+              <CommandPalette searchRole={searchRole} />
+              {/* User-only features */}
+              {isUser && (
+                <>
+                  <Link
+                    className="font-medium text-muted-foreground text-sm hover:text-foreground"
+                    href="/categories"
+                  >
+                    Explore
+                  </Link>
+                  <CartButton />
+                </>
+              )}
               <NotificationDropdown />
               <ProfileMenu />
             </div>
@@ -46,4 +91,17 @@ export function DashboardShell({
       </SidebarProvider>
     </NotificationsProvider>
   );
+}
+
+export function DashboardShell(props: DashboardShellProps) {
+  // Only wrap with CartProvider for user role
+  if (props.searchRole === "user") {
+    return (
+      <CartProvider>
+        <DashboardContent {...props} />
+      </CartProvider>
+    );
+  }
+
+  return <DashboardContent {...props} />;
 }

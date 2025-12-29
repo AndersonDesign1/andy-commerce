@@ -11,7 +11,9 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -25,7 +27,9 @@ import {
 } from "@/components/ui/select";
 
 export function AddProductForm() {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [coverImage, setCoverImage] = useState<string | null>(null);
   const [files, setFiles] = useState<string[]>([]);
 
@@ -33,7 +37,20 @@ export function AddProductForm() {
     e.preventDefault();
     setIsSubmitting(true);
     // TODO: Implement actual product creation
-    setTimeout(() => setIsSubmitting(false), 2000);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast.success("Product published successfully");
+      router.push("/dashboard/products");
+    }, 1500);
+  };
+
+  const handleSaveDraft = () => {
+    setIsSavingDraft(true);
+    // TODO: Implement save as draft
+    setTimeout(() => {
+      setIsSavingDraft(false);
+      toast.success("Draft saved");
+    }, 1000);
   };
 
   const handleCoverUpload = () => {
@@ -71,8 +88,18 @@ export function AddProductForm() {
           </div>
         </div>
         <div className="flex gap-3">
-          <Button className="border-gray-200" type="button" variant="outline">
-            Save as Draft
+          <Button
+            className="border-gray-200"
+            disabled={isSavingDraft}
+            onClick={handleSaveDraft}
+            type="button"
+            variant="outline"
+          >
+            {isSavingDraft ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Save as Draft"
+            )}
           </Button>
           <Button
             className="gap-2 bg-gray-900 text-white hover:bg-gray-800"

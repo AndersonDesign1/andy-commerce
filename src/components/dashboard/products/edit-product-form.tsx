@@ -12,7 +12,20 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -46,7 +59,7 @@ interface EditProductFormProps {
 export function EditProductForm({
   productId: _productId,
 }: EditProductFormProps) {
-  // TODO: Fetch product by productId from API
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [coverImage, setCoverImage] = useState<string | null>(
@@ -58,13 +71,20 @@ export function EditProductForm({
     e.preventDefault();
     setIsSubmitting(true);
     // TODO: Implement actual product update
-    setTimeout(() => setIsSubmitting(false), 2000);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast.success("Product updated successfully");
+    }, 1500);
   };
 
   const handleDelete = () => {
     setIsDeleting(true);
     // TODO: Implement actual product deletion
-    setTimeout(() => setIsDeleting(false), 2000);
+    setTimeout(() => {
+      setIsDeleting(false);
+      toast.success("Product deleted successfully");
+      router.push("/dashboard/products");
+    }, 1500);
   };
 
   const handleCoverUpload = () => {
@@ -98,20 +118,41 @@ export function EditProductForm({
           </div>
         </div>
         <div className="flex gap-3">
-          <Button
-            className="gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
-            disabled={isDeleting}
-            onClick={handleDelete}
-            type="button"
-            variant="outline"
-          >
-            {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Trash2 className="h-4 w-4" />
-            )}
-            Delete
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                className="gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                disabled={isDeleting}
+                type="button"
+                variant="outline"
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4" />
+                )}
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete this product?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  product and all associated files.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-600 hover:bg-red-700"
+                  onClick={handleDelete}
+                >
+                  Delete Product
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             className="gap-2 bg-gray-900 text-white hover:bg-gray-800"
             disabled={isSubmitting}

@@ -7,7 +7,11 @@ export default function StaffLayout({
   children: React.ReactNode;
 }) {
   return (
-    <DashboardShell sidebar={<StaffSidebar />} title="Staff Panel">
+    <DashboardShell
+      searchRole="staff"
+      sidebar={<StaffSidebar />}
+      title="Staff Panel"
+    >
       {children}
     </DashboardShell>
   );

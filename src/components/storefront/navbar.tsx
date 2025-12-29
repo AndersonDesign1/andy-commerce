@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { CartButton } from "@/components/cart/cart-button";
 import { Button } from "@/components/ui/button";
 
 export function Navbar() {
@@ -20,6 +23,12 @@ export function Navbar() {
         <div className="hidden items-center gap-8 md:flex">
           <Link
             className="font-medium text-gray-600 text-sm transition-colors hover:text-gray-900"
+            href="/categories"
+          >
+            Browse
+          </Link>
+          <Link
+            className="font-medium text-gray-600 text-sm transition-colors hover:text-gray-900"
             href="#features"
           >
             Features
@@ -30,16 +39,11 @@ export function Navbar() {
           >
             Pricing
           </Link>
-          <Link
-            className="font-medium text-gray-600 text-sm transition-colors hover:text-gray-900"
-            href="/store/designstudio"
-          >
-            Examples
-          </Link>
         </div>
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          <CartButton />
           <Link
             className="hidden font-medium text-gray-600 text-sm transition-colors hover:text-gray-900 sm:block"
             href="/login"

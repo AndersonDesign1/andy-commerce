@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Compass,
   Download,
   Heart,
   HelpCircle,
@@ -12,6 +13,7 @@ import { RoleSidebar } from "@/components/shared/role-sidebar";
 
 const ACCOUNT_NAV_ITEMS = [
   { href: "/account", label: "Overview", icon: LayoutGrid },
+  { href: "/account/discover", label: "Discover", icon: Compass },
   { href: "/account/purchases", label: "Purchases", icon: ShoppingBag },
   { href: "/account/library", label: "Library", icon: Download },
   { href: "/account/wishlist", label: "Wishlist", icon: Heart },

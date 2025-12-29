@@ -1,7 +1,10 @@
-import { ArrowLeft, Download, ShoppingCart, Star } from "lucide-react";
+"use client";
+
+import { ArrowLeft, Check, Download, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useCart } from "@/contexts/cart-context";
 
 // Mock product data
 const PRODUCT = {
@@ -34,9 +37,18 @@ interface ProductPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  // TODO: Fetch product by id from API
-  const { id: _id } = await params;
+export default function ProductPage({ params: _params }: ProductPageProps) {
+  const { addItem, isInCart } = useCart();
+  const inCart = isInCart(PRODUCT.id);
+
+  const handleAddToCart = () => {
+    addItem({
+      id: PRODUCT.id,
+      name: PRODUCT.name,
+      price: PRODUCT.price,
+      seller: PRODUCT.seller.name,
+    });
+  };
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-12">
@@ -117,10 +129,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           {/* CTA */}
           <div className="flex gap-3">
-            <Button className="h-12 flex-1 gap-2 bg-gray-900 text-white hover:bg-gray-800">
-              <ShoppingCart className="h-4 w-4" />
-              Buy Now
-            </Button>
+            {inCart ? (
+              <Button
+                asChild
+                className="h-12 flex-1 gap-2 bg-green-600 text-white hover:bg-green-700"
+              >
+                <Link href="/cart">
+                  <Check className="h-4 w-4" />
+                  In Cart - View Cart
+                </Link>
+              </Button>
+            ) : (
+              <Button
+                className="h-12 flex-1 gap-2 bg-gray-900 text-white hover:bg-gray-800"
+                onClick={handleAddToCart}
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Add to Cart
+              </Button>
+            )}
           </div>
 
           {/* Features */}

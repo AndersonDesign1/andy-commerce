@@ -116,12 +116,7 @@ export function Navbar() {
                   <Button
                     asChild
                     className="h-12 w-full rounded-xl bg-gray-900 text-white"
-                    <Button
-                    asChild
-                    className="h-12 w-full rounded-xl bg-gray-900text-white"
-                  >
-                    <Link href="/signup" onClick={() => setIsOpen(false)}>Get Started</Link>
-                  </Button>
+                    onClick={() => setIsOpen(false)}
                   >
                     <Link href="/signup">Get Started</Link>
                   </Button>

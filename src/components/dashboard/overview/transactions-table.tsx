@@ -5,8 +5,8 @@ import { useState } from "react";
 import {
   type StatusType,
   statusConfig,
-} from "@/components/dashboard/shared/status-config";
-import { TableToolbar } from "@/components/dashboard/shared/table-toolbar";
+} from "@/components/shared/status-config";
+import { TableToolbar } from "@/components/shared/table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {

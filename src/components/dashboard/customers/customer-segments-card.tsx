@@ -3,7 +3,7 @@
 import {
   type ProgressBarItem,
   ProgressBarList,
-} from "@/components/dashboard/shared/progress-bar-list";
+} from "@/components/shared/progress-bar-list";
 
 interface CustomerSegment {
   name: string;

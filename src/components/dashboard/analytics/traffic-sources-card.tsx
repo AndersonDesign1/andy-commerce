@@ -4,7 +4,7 @@ import { Globe } from "lucide-react";
 import {
   type ProgressBarItem,
   ProgressBarList,
-} from "@/components/dashboard/shared/progress-bar-list";
+} from "@/components/shared/progress-bar-list";
 
 interface TrafficSource {
   name: string;

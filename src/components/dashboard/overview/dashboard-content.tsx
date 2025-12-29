@@ -7,8 +7,8 @@ import {
   type Transaction,
   TransactionsTable,
 } from "@/components/dashboard/overview/transactions-table";
-import { MetricCard } from "@/components/dashboard/shared/metric-card";
 import { TransactionDetail } from "@/components/dashboard/transaction-detail";
+import { MetricCard } from "@/components/shared/metric-card";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import type { DashboardData } from "@/lib/data";
 

@@ -40,15 +40,16 @@ export function DashboardListItem({
   children,
   onClick,
 }: DashboardListItemProps) {
-  return (
-    <div
-      className="flex items-center justify-between px-5 py-4 transition-colors hover:bg-muted/50"
-      onClick={onClick}
-      onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-    >
-      {children}
-    </div>
-  );
+  const className =
+    "flex w-full items-center justify-between px-5 py-4 transition-colors hover:bg-muted/50";
+
+  if (onClick) {
+    return (
+      <button className={className} onClick={onClick} type="button">
+        {children}
+      </button>
+    );
+  }
+
+  return <div className={className}>{children}</div>;
 }

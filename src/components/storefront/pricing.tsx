@@ -57,9 +57,9 @@ const PLANS = [
 
 export function Pricing() {
   return (
-    <section className="px-6 py-24" id="pricing">
-      <div className="mx-auto flex max-w-6xl flex-col gap-16">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+    <section className="w-full px-4 py-24 sm:px-6 lg:px-8" id="pricing">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-16">
+        <div className="flex w-full max-w-2xl flex-col items-center gap-4 text-center sm:mx-auto">
           <span className="inline-block rounded-full border border-border bg-muted px-3 py-1 font-medium text-muted-foreground text-sm">
             Pricing
           </span>
@@ -71,7 +71,7 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {PLANS.map((plan) => (
             <div
               className={`relative flex flex-col gap-6 rounded-2xl border p-8 ${

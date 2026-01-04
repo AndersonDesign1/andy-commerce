@@ -82,7 +82,7 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 border-border border-t pt-8 md:flex-row">
           <p className="text-muted-foreground text-sm">
-            © 2024 Overlay. All rights reserved.
+            © {new Date().getFullYear()} Overlay. All rights reserved.
           </p>
           <p className="text-muted-foreground/60 text-sm">
             Made with ❤️ for creators everywhere

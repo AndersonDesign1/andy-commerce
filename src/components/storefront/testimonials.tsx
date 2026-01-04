@@ -29,9 +29,9 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section className="px-6 py-24">
-      <div className="mx-auto flex max-w-6xl flex-col gap-16">
-        <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 text-center">
+    <section className="w-full px-4 py-24 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-16">
+        <div className="flex w-full max-w-2xl flex-col items-center gap-4 text-center sm:mx-auto">
           <span className="inline-block rounded-full border border-border bg-muted px-3 py-1 font-medium text-muted-foreground text-sm">
             Testimonials
           </span>
@@ -43,7 +43,7 @@ export function Testimonials() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
           {TESTIMONIALS.map((testimonial) => (
             <div
               className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6"

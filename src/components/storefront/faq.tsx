@@ -35,9 +35,9 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="px-6 py-24">
-      <div className="mx-auto flex max-w-3xl flex-col gap-12">
-        <div className="flex flex-col items-center gap-4 text-center">
+    <section className="w-full px-4 py-24 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-12">
+        <div className="flex w-full flex-col items-center gap-4 text-center">
           <span className="inline-block rounded-full border border-border bg-muted px-3 py-1 font-medium text-muted-foreground text-sm">
             FAQ
           </span>

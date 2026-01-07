@@ -93,6 +93,7 @@ function SignupFormContent() {
           <div className="space-y-2">
             <Label htmlFor="storeName">Store name</Label>
             <Input
+              autoComplete="organization"
               className="h-11"
               id="storeName"
               placeholder="My Awesome Store"

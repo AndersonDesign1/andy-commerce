@@ -39,7 +39,14 @@ export function OnboardingStep({
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       {/* Progress indicator */}
-      <div className="flex items-center justify-center gap-2">
+      <div
+        aria-label={`Step ${currentStep + 1} of ${totalSteps}`}
+        aria-valuemax={totalSteps}
+        aria-valuemin={1}
+        aria-valuenow={currentStep + 1}
+        className="flex items-center justify-center gap-2"
+        role="progressbar"
+      >
         {Array.from({ length: totalSteps }).map((_, index) => {
           const stepId = `step-${currentStep >= index ? "completed" : "pending"}-${totalSteps}`;
           const getStepClass = () => {
@@ -53,6 +60,7 @@ export function OnboardingStep({
           };
           return (
             <div
+              aria-hidden="true"
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
                 getStepClass()

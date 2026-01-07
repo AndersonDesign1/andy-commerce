@@ -299,7 +299,12 @@ export function OnboardingFlow() {
         </button>
 
         <Button
-          className="gap-2 rounded-full px-6"
+          className={cn(
+            "gap-2 rounded-full px-6 transition-all duration-300",
+            canContinue
+              ? "bg-primary-violet text-white shadow-md shadow-primary-violet/25 hover:bg-primary-violet-700"
+              : "opacity-50"
+          )}
           disabled={!canContinue}
           onClick={handleContinue}
           size="lg"

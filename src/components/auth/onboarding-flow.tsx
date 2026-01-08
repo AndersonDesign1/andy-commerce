@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useRequireAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { api } from "../../../convex/_generated/api";
 
@@ -104,6 +105,7 @@ const STEPS: StepData[] = [
 
 export function OnboardingFlow() {
   const router = useRouter();
+  const { isLoading: authLoading, isAuthenticated } = useRequireAuth("/signup");
   const [currentStep, setCurrentStep] = useState(0);
   const [selections, setSelections] = useState<
     Record<number, string | string[]>
@@ -116,6 +118,21 @@ export function OnboardingFlow() {
   const currentSelection = selections[currentStep];
   const isMultiSelect = currentStepData.multiSelect ?? false;
   const isLastStep = currentStep === STEPS.length - 1;
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <span className="size-8 animate-spin rounded-full border-4 border-primary-violet/20 border-t-primary-violet" />
+          <p className="text-muted-foreground text-sm">Loading…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   // Check if current step has valid selection
   const hasSelection = isMultiSelect

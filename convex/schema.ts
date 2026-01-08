@@ -5,6 +5,7 @@ export default defineSchema({
   profiles: defineTable({
     userId: v.string(),
     userType: v.optional(v.string()),
+    role: v.optional(v.string()),
     storeName: v.optional(v.string()),
     offerTypes: v.optional(v.array(v.string())),
     onboardingCompleted: v.optional(v.boolean()),

@@ -27,6 +27,13 @@ export function LoginForm() {
       });
 
       if (result.error) {
+        if (result.error.status === 403) {
+          toast.error("Please verify your email first");
+          router.push(
+            `/verify-email?email=${encodeURIComponent(email.trim())}`
+          );
+          return;
+        }
         toast.error(result.error.message ?? "Failed to sign in");
         return;
       }

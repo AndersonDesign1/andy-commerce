@@ -39,11 +39,7 @@ export function useRequireAuth(redirectTo = "/login") {
   return { user, isLoading, isAuthenticated: !!user };
 }
 
-export function useRequireRole(
-  requiredRole: Role | Role[],
-  redirectTo = "/dashboard"
-) {
-  const router = useRouter();
+export function useRequireRole(requiredRole: Role | Role[]) {
   const { user, isLoading: sessionLoading } = useSession();
   const roleData = useQuery(api.profiles.getRole);
   const isLoadingRole = roleData === undefined;
@@ -53,37 +49,14 @@ export function useRequireRole(
     ? requiredRole
     : [requiredRole];
 
-  useEffect(() => {
-    if (!(sessionLoading || user)) {
-      router.push("/login");
-      return;
-    }
-
-    if (!(sessionLoading || isLoadingRole) && user) {
-      const hasAccess =
-        allowedRoles.includes(currentRole) ||
-        (allowedRoles.includes("staff") && currentRole === "admin");
-
-      if (!hasAccess) {
-        router.push(redirectTo);
-      }
-    }
-  }, [
-    sessionLoading,
-    isLoadingRole,
-    user,
-    currentRole,
-    allowedRoles,
-    router,
-    redirectTo,
-  ]);
+  const hasAccess =
+    allowedRoles.includes(currentRole) ||
+    (allowedRoles.includes("staff") && currentRole === "admin");
 
   return {
     user,
     role: currentRole,
     isLoading: sessionLoading || isLoadingRole,
-    hasAccess:
-      allowedRoles.includes(currentRole) ||
-      (allowedRoles.includes("staff") && currentRole === "admin"),
+    hasAccess,
   };
 }

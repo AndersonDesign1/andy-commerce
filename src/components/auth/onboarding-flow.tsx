@@ -218,23 +218,23 @@ export function OnboardingFlow() {
   };
 
   const handleSkip = async () => {
-    // Skip onboarding, set default user type
     await saveProfileAndRedirect("buyer");
   };
 
-  // Calculate progress percentage
+  const completedSteps = Object.keys(selections).filter((key) => {
+    const sel = selections[Number(key)];
+    return sel !== undefined && (Array.isArray(sel) ? sel.length > 0 : true);
+  }).length;
   const totalSteps = isBuyerPath ? 1 : STEPS.length;
-  const progressPercent = ((currentStep + 1) / totalSteps) * 100;
+  const progressPercent = (completedSteps / totalSteps) * 100;
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
-      {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 left-1/2 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-gradient-to-b from-primary-violet-100/20 to-transparent blur-3xl dark:from-primary-violet-900/10" />
         <div className="absolute right-1/4 bottom-0 h-[400px] w-[600px] rounded-full bg-gradient-to-t from-secondary-magenta-100/10 to-transparent blur-3xl dark:from-secondary-magenta-900/5" />
       </div>
 
-      {/* Header with progress */}
       <div className="flex items-center gap-4 px-6 py-4">
         {currentStep > 0 ? (
           <button
@@ -253,7 +253,6 @@ export function OnboardingFlow() {
           </Link>
         )}
 
-        {/* Progress bar */}
         <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <motion.div
             animate={{ width: `${progressPercent}%` }}
@@ -264,7 +263,6 @@ export function OnboardingFlow() {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
         <AnimatePresence mode="wait">
           <motion.div
@@ -275,7 +273,6 @@ export function OnboardingFlow() {
             key={currentStep}
             transition={{ duration: 0.3 }}
           >
-            {/* Title */}
             <div className="flex flex-col gap-2 text-center">
               <h1 className="font-bold text-3xl text-foreground tracking-tight sm:text-4xl">
                 {currentStepData.title}
@@ -285,7 +282,6 @@ export function OnboardingFlow() {
               </p>
             </div>
 
-            {/* Options grid */}
             <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3">
               {currentStepData.options.map((option) => {
                 const selected = isSelected(option.id);
@@ -309,7 +305,6 @@ export function OnboardingFlow() {
                     type="button"
                     whileTap={{ scale: 0.98 }}
                   >
-                    {/* Icon */}
                     <motion.div
                       animate={{
                         scale: selected ? [1, 1.15, 1] : 1,
@@ -329,7 +324,6 @@ export function OnboardingFlow() {
                       {option.icon}
                     </motion.div>
 
-                    {/* Title */}
                     <span className="font-medium text-foreground">
                       {option.title}
                     </span>
@@ -341,7 +335,6 @@ export function OnboardingFlow() {
         </AnimatePresence>
       </div>
 
-      {/* Footer */}
       <div className="sticky bottom-0 z-20 flex items-center justify-between border-border border-t bg-background/80 px-6 py-4 backdrop-blur-md sm:bg-card/50">
         <button
           className="text-muted-foreground text-sm transition-colors hover:text-foreground"

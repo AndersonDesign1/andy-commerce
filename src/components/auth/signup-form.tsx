@@ -48,8 +48,16 @@ export function SignupForm() {
         return;
       }
 
-      toast.success("Account created! Let's set up your profile.");
-      router.push("/onboarding");
+      // Send sign-in OTP immediately after signup
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email.trim(),
+        type: "sign-in",
+      });
+
+      toast.success(
+        "Account created! Check your email for the verification code."
+      );
+      router.push(`/verify-email?email=${encodeURIComponent(email.trim())}`);
     } catch {
       toast.error("An unexpected error occurred");
     } finally {

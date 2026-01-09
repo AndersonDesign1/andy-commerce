@@ -51,14 +51,31 @@ export function ForgotPasswordForm() {
     }
   };
 
-  const handleVerifyOTP = (e: React.FormEvent) => {
+  const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length !== 6) {
       return;
     }
 
-    // Move to password step (we'll verify OTP when resetting password)
-    setStep("password");
+    setIsLoading(true);
+
+    try {
+      const result = await authClient.emailOtp.verifyEmail({
+        email: email.trim(),
+        otp,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message ?? "Invalid verification code");
+        return;
+      }
+
+      setStep("password");
+    } catch {
+      toast.error("Failed to verify code");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
@@ -191,10 +208,17 @@ export function ForgotPasswordForm() {
 
           <Button
             className="h-11 w-full bg-primary-violet text-white shadow-md shadow-primary-violet/25 hover:bg-primary-violet-700"
-            disabled={otp.length !== 6}
+            disabled={otp.length !== 6 || isLoading}
             type="submit"
           >
-            Continue
+            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <span className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                Verifying…
+              </div>
+            ) : (
+              "Continue"
+            )}
           </Button>
         </form>
 

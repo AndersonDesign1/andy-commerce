@@ -31,8 +31,9 @@ async function sendEmailViaResend(
 ): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.error("RESEND_API_KEY not set, email not sent");
-    return;
+    throw new Error(
+      "RESEND_API_KEY not configured. Please set the RESEND_API_KEY environment variable."
+    );
   }
 
   const response = await fetch("https://api.resend.com/emails", {
@@ -50,8 +51,9 @@ async function sendEmailViaResend(
   });
 
   if (!response.ok) {
-    const error = await response.text();
-    console.error("Failed to send email:", error);
+    throw new Error(
+      "Failed to send verification email. Please try again later."
+    );
   }
 }
 

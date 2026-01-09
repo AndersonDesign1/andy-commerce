@@ -32,6 +32,50 @@ export const getProfile = query({
   },
 });
 
+export const getAllUsers = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.string(),
+      name: v.optional(v.string()),
+      email: v.string(),
+      role: v.string(),
+      createdAt: v.float64(),
+    })
+  ),
+  handler: async (ctx) => {
+    const user = await authComponent.getAuthUser(ctx);
+    if (!user) {
+      return [];
+    }
+
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user_id", (q) => q.eq("userId", user._id))
+      .first();
+
+    if (profile?.role !== "admin") {
+      return [];
+    }
+
+    const profiles = await ctx.db.query("profiles").collect();
+    const usersWithProfiles = await Promise.all(
+      profiles.map(async (p) => {
+        const authUser = await authComponent.getAnyUserById(ctx, p.userId);
+        return {
+          _id: p.userId,
+          name: authUser?.name ?? undefined,
+          email: authUser?.email ?? "Unknown",
+          role: p.role ?? "user",
+          createdAt: p.createdAt,
+        };
+      })
+    );
+
+    return usersWithProfiles;
+  },
+});
+
 export const getRole = query({
   args: {},
   returns: v.union(v.string(), v.null()),
@@ -52,7 +96,9 @@ export const getRole = query({
 
 export const updateProfile = mutation({
   args: {
-    userType: v.optional(v.string()),
+    userType: v.optional(
+      v.union(v.literal("buyer"), v.literal("seller"), v.literal("both"))
+    ),
     storeName: v.optional(v.string()),
     offerTypes: v.optional(v.array(v.string())),
   },
@@ -68,19 +114,6 @@ export const updateProfile = mutation({
       .withIndex("by_user_id", (q) => q.eq("userId", user._id))
       .first();
 
-    // Check for pending role invite
-    const invite = await ctx.db
-      .query("role_invites")
-      .withIndex("by_email", (q) => q.eq("email", user.email))
-      .first();
-
-    const assignedRole = invite?.role ?? "user";
-
-    // If invite exists, delete it after use
-    if (invite) {
-      await ctx.db.delete(invite._id);
-    }
-
     const now = Date.now();
 
     if (existingProfile) {
@@ -88,11 +121,6 @@ export const updateProfile = mutation({
         userType: args.userType ?? existingProfile.userType,
         storeName: args.storeName ?? existingProfile.storeName,
         offerTypes: args.offerTypes ?? existingProfile.offerTypes,
-        // Only upgrade role if invite exists, never downgrade
-        role:
-          invite && assignedRole !== "user"
-            ? assignedRole
-            : existingProfile.role,
         onboardingCompleted: true,
         updatedAt: now,
       });
@@ -102,13 +130,68 @@ export const updateProfile = mutation({
     return ctx.db.insert("profiles", {
       userId: user._id,
       userType: args.userType ?? "buyer",
-      role: assignedRole,
+      role: "user",
       storeName: args.storeName,
       offerTypes: args.offerTypes,
       onboardingCompleted: true,
       createdAt: now,
       updatedAt: now,
     });
+  },
+});
+
+export const claimRoleInvite = mutation({
+  args: {},
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx) => {
+    const user = await authComponent.getAuthUser(ctx);
+    if (!user) {
+      throw new Error("Not authenticated");
+    }
+
+    const invite = await ctx.db
+      .query("role_invites")
+      .withIndex("by_email", (q) => q.eq("email", user.email))
+      .first();
+
+    if (!invite) {
+      return null;
+    }
+
+    const existingProfile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user_id", (q) => q.eq("userId", user._id))
+      .first();
+
+    const now = Date.now();
+
+    if (existingProfile) {
+      const currentRole = existingProfile.role ?? "user";
+      const roleHierarchy = { user: 0, staff: 1, admin: 2 };
+      const currentLevel =
+        roleHierarchy[currentRole as keyof typeof roleHierarchy] ?? 0;
+      const inviteLevel =
+        roleHierarchy[invite.role as keyof typeof roleHierarchy] ?? 0;
+
+      if (inviteLevel > currentLevel) {
+        await ctx.db.patch(existingProfile._id, {
+          role: invite.role,
+          updatedAt: now,
+        });
+      }
+    } else {
+      await ctx.db.insert("profiles", {
+        userId: user._id,
+        userType: "buyer",
+        role: invite.role,
+        onboardingCompleted: false,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
+    await ctx.db.delete(invite._id);
+    return invite.role;
   },
 });
 

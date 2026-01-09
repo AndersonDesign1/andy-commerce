@@ -1,6 +1,7 @@
 "use client";
 
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -11,6 +12,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useSession } from "@/hooks/use-auth";
 import { authClient } from "@/lib/auth-client";
 
 export function VerifyEmailForm() {
@@ -18,12 +20,17 @@ export function VerifyEmailForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") ?? "";
 
+  const { user, isLoading: isSessionLoading } = useSession();
+
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
+  // Security check: if user is authenticated, validate email matches session
+  const isEmailMismatch = user && email && user.email !== email;
+
   const handleSendOTP = async () => {
-    if (!email) {
+    if (!email || isEmailMismatch) {
       return;
     }
 
@@ -31,7 +38,7 @@ export function VerifyEmailForm() {
     try {
       const result = await authClient.emailOtp.sendVerificationOtp({
         email,
-        type: "sign-in",
+        type: "email-verification",
       });
 
       if (result.error) {
@@ -49,7 +56,7 @@ export function VerifyEmailForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (value.length !== 6 || !email) {
+    if (value.length !== 6 || !email || isEmailMismatch) {
       return;
     }
 
@@ -73,6 +80,50 @@ export function VerifyEmailForm() {
       setIsLoading(false);
     }
   };
+
+  // Loading state while checking session
+  if (isSessionLoading) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-8">
+        <span className="size-8 animate-spin rounded-full border-4 border-primary-violet/20 border-t-primary-violet" />
+        <p className="text-muted-foreground text-sm">Loading…</p>
+      </div>
+    );
+  }
+
+  // Security: Show error if authenticated user tries to verify different email
+  if (isEmailMismatch) {
+    return (
+      <div className="flex flex-col gap-6 text-center">
+        <div className="flex justify-center">
+          <div className="flex size-16 items-center justify-center rounded-full bg-error-red/10">
+            <AlertTriangle className="size-8 text-error-red" />
+          </div>
+        </div>
+        <h1 className="font-semibold text-2xl text-foreground">
+          Invalid Verification
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          You're signed in as{" "}
+          <span className="font-medium text-foreground">{user.email}</span> but
+          trying to verify{" "}
+          <span className="font-medium text-foreground">{email}</span>.
+        </p>
+        <div className="flex flex-col gap-3">
+          <Button asChild className="h-11 w-full">
+            <Link href="/dashboard">Go to Dashboard</Link>
+          </Button>
+          <Button
+            className="h-11 w-full"
+            onClick={() => router.push(`/verify-email?email=${user.email}`)}
+            variant="outline"
+          >
+            Verify {user.email}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!email) {
     return (

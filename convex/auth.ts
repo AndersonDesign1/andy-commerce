@@ -106,6 +106,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       "http://localhost:3000",
       "https://flikapp.xyz",
       "https://www.flikapp.xyz",
+      convexSiteUrl,
     ],
     emailAndPassword: {
       enabled: true,

@@ -8,6 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { InviteRoleDialog } from "@/components/admin/invite-role-dialog";
 import { StatsGrid } from "@/components/shared/stats-grid";
 import { TableToolbar } from "@/components/shared/table-toolbar";
 import { Button } from "@/components/ui/button";
@@ -143,7 +144,7 @@ export default function AdminUsersPage() {
             Manage all users on the platform.
           </p>
         </div>
-        <Button>Add User</Button>
+        <InviteRoleDialog />
       </div>
 
       <StatsGrid metrics={USER_METRICS} />

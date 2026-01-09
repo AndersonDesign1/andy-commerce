@@ -12,4 +12,12 @@ export default defineSchema({
     createdAt: v.float64(),
     updatedAt: v.float64(),
   }).index("by_user_id", ["userId"]),
+
+  // Role invites for admin/staff role assignment
+  role_invites: defineTable({
+    email: v.string(),
+    role: v.string(), // "admin" | "staff"
+    invitedBy: v.string(), // userId of the admin who invited
+    createdAt: v.float64(),
+  }).index("by_email", ["email"]),
 });

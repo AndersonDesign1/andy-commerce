@@ -48,10 +48,10 @@ export function SignupForm() {
         return;
       }
 
-      // Send sign-in OTP immediately after signup
+      // Send email verification OTP immediately after signup
       await authClient.emailOtp.sendVerificationOtp({
         email: email.trim(),
-        type: "sign-in",
+        type: "email-verification",
       });
 
       toast.success(

@@ -20,12 +20,18 @@ export function useSession() {
   }>({ user: null, isLoading: true });
 
   useEffect(() => {
-    authClient.getSession().then((result) => {
-      setSession({
-        user: result.data?.user ?? null,
-        isLoading: false,
+    authClient
+      .getSession()
+      .then((result) => {
+        setSession({
+          user: result.data?.user ?? null,
+          isLoading: false,
+        });
+      })
+      .catch((error) => {
+        console.error("[Auth] Failed to get session:", error);
+        setSession({ user: null, isLoading: false });
       });
-    });
   }, []);
 
   return session;

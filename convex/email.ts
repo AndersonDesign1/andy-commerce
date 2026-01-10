@@ -103,7 +103,7 @@ export const sendOTPEmail = internalAction({
       const { error } = await resend.emails.send({
         from: "Flik <noreply@notification.flikapp.xyz>",
         to: [args.to],
-        subject: `Your Flik verification code: ${args.otp}`,
+        subject: "Your Flik verification code",
         html,
       });
 

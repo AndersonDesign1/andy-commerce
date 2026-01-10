@@ -16,7 +16,8 @@ export function OAuthButtons({ isLoading }: OAuthButtonsProps) {
         provider: "google",
         callbackURL: "/dashboard",
       });
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Google sign-in failed:", error);
       toast.error("Failed to sign in with Google");
     }
   };
@@ -27,7 +28,8 @@ export function OAuthButtons({ isLoading }: OAuthButtonsProps) {
         provider: "github",
         callbackURL: "/dashboard",
       });
-    } catch {
+    } catch (error) {
+      console.error("[Auth] GitHub sign-in failed:", error);
       toast.error("Failed to sign in with GitHub");
     }
   };

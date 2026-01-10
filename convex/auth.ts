@@ -16,8 +16,15 @@ function getRequiredEnv(name: string): string {
   return value;
 }
 
-function getOptionalEnv(name: string, defaultValue = ""): string {
-  return process.env[name] ?? defaultValue;
+function getOAuthEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    console.warn(
+      `[Auth Warning] OAuth env var ${name} is not set. ` +
+        "The corresponding OAuth provider will not work."
+    );
+  }
+  return value ?? "";
 }
 
 const convexSiteUrl = getRequiredEnv("CONVEX_SITE_URL");
@@ -116,12 +123,12 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     },
     socialProviders: {
       google: {
-        clientId: getOptionalEnv("GOOGLE_CLIENT_ID"),
-        clientSecret: getOptionalEnv("GOOGLE_CLIENT_SECRET"),
+        clientId: getOAuthEnv("GOOGLE_CLIENT_ID"),
+        clientSecret: getOAuthEnv("GOOGLE_CLIENT_SECRET"),
       },
       github: {
-        clientId: getOptionalEnv("GITHUB_CLIENT_ID"),
-        clientSecret: getOptionalEnv("GITHUB_CLIENT_SECRET"),
+        clientId: getOAuthEnv("GITHUB_CLIENT_ID"),
+        clientSecret: getOAuthEnv("GITHUB_CLIENT_SECRET"),
       },
     },
     plugins: [
@@ -135,7 +142,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
             subject = "Reset your Flik password";
           }
           const html = generateOTPEmailHTML(otp);
-          await sendEmailViaResend(email, `${subject}: ${otp}`, html);
+          await sendEmailViaResend(email, subject, html);
         },
       }),
       twoFactor({
@@ -144,7 +151,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
             const html = generateOTPEmailHTML(otp, user.name);
             await sendEmailViaResend(
               user.email,
-              `Your Flik verification code: ${otp}`,
+              "Your Flik verification code",
               html
             );
           },

@@ -58,7 +58,8 @@ export function SignupForm() {
         "Account created! Check your email for the verification code."
       );
       router.push(`/verify-email?email=${encodeURIComponent(email.trim())}`);
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Signup failed:", error);
       toast.error("An unexpected error occurred");
     } finally {
       setIsLoading(false);

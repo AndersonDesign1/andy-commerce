@@ -40,7 +40,8 @@ export function LoginForm() {
 
       toast.success("Signed in successfully!");
       router.push("/dashboard");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Login failed:", error);
       toast.error("An unexpected error occurred");
     } finally {
       setIsLoading(false);

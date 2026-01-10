@@ -47,7 +47,8 @@ export function VerifyEmailForm() {
       }
 
       toast.success("Verification code sent!");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Send verification OTP failed:", error);
       toast.error("Failed to send verification code");
     } finally {
       setIsResending(false);
@@ -74,7 +75,8 @@ export function VerifyEmailForm() {
 
       toast.success("Email verified! Welcome to Flik.");
       router.push("/onboarding");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Email verification failed:", error);
       toast.error("Failed to verify code");
     } finally {
       setIsLoading(false);

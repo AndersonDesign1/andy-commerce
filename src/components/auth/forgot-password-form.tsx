@@ -44,7 +44,8 @@ export function ForgotPasswordForm() {
 
       toast.success("Code sent to your email!");
       setStep("otp");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Send password reset OTP failed:", error);
       toast.error("Failed to send code");
     } finally {
       setIsLoading(false);
@@ -71,7 +72,8 @@ export function ForgotPasswordForm() {
       }
 
       setStep("password");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Password reset OTP verification failed:", error);
       toast.error("Failed to verify code");
     } finally {
       setIsLoading(false);
@@ -107,7 +109,8 @@ export function ForgotPasswordForm() {
 
       toast.success("Password reset successfully!");
       router.push("/login");
-    } catch {
+    } catch (error) {
+      console.error("[Auth] Password reset failed:", error);
       toast.error("Failed to reset password");
     } finally {
       setIsLoading(false);

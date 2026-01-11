@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { OnboardingFlow } from "@/components/auth/onboarding-flow";
-import { fetchAuthQuery, isAuthenticated } from "@/lib/auth-server";
+import {
+  fetchAuthMutation,
+  fetchAuthQuery,
+  isAuthenticated,
+} from "@/lib/auth-server";
 import { api } from "../../../convex/_generated/api";
 
 export const metadata = {
@@ -21,6 +25,9 @@ export default async function OnboardingPage() {
   if (profile?.onboardingCompleted) {
     redirect("/dashboard");
   }
+
+  // Claim any pending role invite for OAuth/new users
+  await fetchAuthMutation(api.profiles.claimRoleInvite);
 
   return <OnboardingFlow />;
 }

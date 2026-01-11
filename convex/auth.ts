@@ -111,6 +111,14 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     appName: "Flik",
     baseURL: convexSiteUrl,
     database: authComponent.adapter(ctx),
+    session: {
+      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      updateAge: 60 * 60 * 24, // Refresh every 24 hours
+    },
+    rateLimit: {
+      window: 60, // 60 second window
+      max: 10, // Max 10 requests per window
+    },
     trustedOrigins: [
       "http://localhost:3000",
       "https://flikapp.xyz",

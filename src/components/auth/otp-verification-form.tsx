@@ -3,7 +3,7 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,11 +13,40 @@ import {
 } from "@/components/ui/input-otp";
 import { authClient } from "@/lib/auth-client";
 
+function ResendButtonText({
+  isResending,
+  resendCooldown,
+}: {
+  isResending: boolean;
+  resendCooldown: number;
+}) {
+  if (isResending) {
+    return (
+      <span className="inline-flex items-center gap-2">
+        <span className="size-3 animate-spin rounded-full border-2 border-primary-violet/20 border-t-primary-violet" />
+        Resending…
+      </span>
+    );
+  }
+  if (resendCooldown > 0) {
+    return `Resend (${resendCooldown}s)`;
+  }
+  return "Resend";
+}
+
 export function OTPVerificationForm() {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +76,10 @@ export function OTPVerificationForm() {
   };
 
   const handleResend = async () => {
+    if (resendCooldown > 0) {
+      return;
+    }
+
     setIsResending(true);
     try {
       const result = await authClient.twoFactor.sendOtp();
@@ -57,6 +90,7 @@ export function OTPVerificationForm() {
       }
 
       toast.success("Code sent!");
+      setResendCooldown(60);
     } catch {
       toast.error("Failed to resend code");
     } finally {
@@ -118,18 +152,14 @@ export function OTPVerificationForm() {
           Didn't receive the code?{" "}
           <button
             className="font-medium text-primary-violet hover:underline disabled:opacity-50"
-            disabled={isResending}
+            disabled={isResending || resendCooldown > 0}
             onClick={handleResend}
             type="button"
           >
-            {isResending ? (
-              <span className="inline-flex items-center gap-2">
-                <span className="size-3 animate-spin rounded-full border-2 border-primary-violet/20 border-t-primary-violet" />
-                Resending…
-              </span>
-            ) : (
-              "Resend"
-            )}
+            <ResendButtonText
+              isResending={isResending}
+              resendCooldown={resendCooldown}
+            />
           </button>
         </p>
       </div>

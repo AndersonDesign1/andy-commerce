@@ -14,7 +14,7 @@ export function OAuthButtons({ isLoading }: OAuthButtonsProps) {
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/onboarding",
       });
     } catch {
       toast.error("Failed to sign in with Google");
@@ -25,7 +25,7 @@ export function OAuthButtons({ isLoading }: OAuthButtonsProps) {
     try {
       await authClient.signIn.social({
         provider: "github",
-        callbackURL: "/dashboard",
+        callbackURL: "/onboarding",
       });
     } catch {
       toast.error("Failed to sign in with GitHub");

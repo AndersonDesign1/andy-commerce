@@ -4,7 +4,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,16 @@ import {
 } from "@/components/ui/input-otp";
 import { useSession } from "@/hooks/use-auth";
 import { authClient } from "@/lib/auth-client";
+
+function getResendButtonText(isResending: boolean, resendCooldown: number) {
+  if (isResending) {
+    return "Sending…";
+  }
+  if (resendCooldown > 0) {
+    return `Resend (${resendCooldown}s)`;
+  }
+  return "Resend";
+}
 
 export function VerifyEmailForm() {
   const router = useRouter();
@@ -25,12 +35,20 @@ export function VerifyEmailForm() {
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   // Security check: if user is authenticated, validate email matches session
   const isEmailMismatch = user && email && user.email !== email;
 
   const handleSendOTP = async () => {
-    if (!email || isEmailMismatch) {
+    if (!email || isEmailMismatch || resendCooldown > 0) {
       return;
     }
 
@@ -47,6 +65,7 @@ export function VerifyEmailForm() {
       }
 
       toast.success("Verification code sent!");
+      setResendCooldown(60);
     } catch {
       toast.error("Failed to send verification code");
     } finally {
@@ -195,11 +214,11 @@ export function VerifyEmailForm() {
           Didn't receive the code?{" "}
           <button
             className="font-medium text-primary-violet hover:underline disabled:opacity-50"
-            disabled={isResending}
+            disabled={isResending || resendCooldown > 0}
             onClick={handleSendOTP}
             type="button"
           >
-            {isResending ? "Sending…" : "Resend"}
+            {getResendButtonText(isResending, resendCooldown)}
           </button>
         </p>
       </div>

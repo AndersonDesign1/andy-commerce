@@ -49,10 +49,18 @@ export function SignupForm() {
       }
 
       // Send email verification OTP immediately after signup
-      await authClient.emailOtp.sendVerificationOtp({
+      const otpResult = await authClient.emailOtp.sendVerificationOtp({
         email: email.trim(),
         type: "email-verification",
       });
+
+      if (otpResult.error) {
+        toast.error(
+          "Account created but failed to send verification email. Please try again from login."
+        );
+        router.push("/login");
+        return;
+      }
 
       toast.success(
         "Account created! Check your email for the verification code."

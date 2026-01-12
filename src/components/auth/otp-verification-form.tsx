@@ -3,54 +3,114 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { authClient } from "@/lib/auth-client";
+
+function ResendButtonText({
+  isResending,
+  resendCooldown,
+}: {
+  isResending: boolean;
+  resendCooldown: number;
+}) {
+  if (isResending) {
+    return (
+      <span className="inline-flex items-center gap-2">
+        <span className="size-3 animate-spin rounded-full border-2 border-primary-violet/20 border-t-primary-violet" />
+        Resending…
+      </span>
+    );
+  }
+  if (resendCooldown > 0) {
+    return `Resend (${resendCooldown}s)`;
+  }
+  return "Resend";
+}
 
 export function OTPVerificationForm() {
   const router = useRouter();
   const [value, setValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (value.length !== 6) {
       return;
     }
+
     setIsLoading(true);
-    // TODO: Implement actual OTP verification
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      const result = await authClient.twoFactor.verifyOtp({
+        code: value,
+        trustDevice: true,
+      });
+
+      if (result.error) {
+        toast.error(result.error.message ?? "Invalid verification code");
+        return;
+      }
+
+      toast.success("Verified!");
       router.push("/dashboard");
-    }, 1500);
+    } catch {
+      toast.error("Failed to verify code");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
+    if (resendCooldown > 0) {
+      return;
+    }
+
     setIsResending(true);
-    // TODO: Implement resend OTP
-    setTimeout(() => setIsResending(false), 2000);
+    try {
+      const result = await authClient.twoFactor.sendOtp();
+
+      if (result.error) {
+        toast.error(result.error.message ?? "Failed to resend code");
+        return;
+      }
+
+      toast.success("Code sent!");
+      setResendCooldown(60);
+    } catch {
+      toast.error("Failed to resend code");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
       <div className="flex flex-col gap-1 text-center">
         <h1 className="font-semibold text-2xl text-foreground">
-          Verify your email
+          Verify your identity
         </h1>
         <p className="text-muted-foreground text-sm">
-          We've sent a 6-digit code to your email address.
+          We've sent a 6-digit code to your email.
           <br />
-          Enter it below to verify your account.
+          Enter it below to continue.
         </p>
       </div>
 
-      {/* OTP Input */}
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="flex justify-center">
           <InputOTP
@@ -79,7 +139,7 @@ export function OTPVerificationForm() {
           {isLoading ? (
             <div className="flex items-center gap-2">
               <span className="size-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-              Verify
+              Verifying…
             </div>
           ) : (
             "Verify"
@@ -87,29 +147,23 @@ export function OTPVerificationForm() {
         </Button>
       </form>
 
-      {/* Resend */}
       <div className="text-center">
         <p className="text-muted-foreground text-sm">
           Didn't receive the code?{" "}
           <button
             className="font-medium text-primary-violet hover:underline disabled:opacity-50"
-            disabled={isResending}
+            disabled={isResending || resendCooldown > 0}
             onClick={handleResend}
             type="button"
           >
-            {isResending ? (
-              <div className="flex items-center gap-2">
-                <span className="size-3 animate-spin rounded-full border-2 border-primary-violet/20 border-t-primary-violet" />
-                Resending…
-              </div>
-            ) : (
-              "Resend"
-            )}
+            <ResendButtonText
+              isResending={isResending}
+              resendCooldown={resendCooldown}
+            />
           </button>
         </p>
       </div>
 
-      {/* Back to login */}
       <p className="text-center text-muted-foreground text-sm">
         <Link
           className="font-medium text-primary-violet hover:underline"

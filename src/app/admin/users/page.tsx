@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "convex/react";
 import {
   MoreHorizontal,
   Shield,
@@ -8,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { InviteRoleDialog } from "@/components/admin/invite-role-dialog";
 import { StatsGrid } from "@/components/shared/stats-grid";
 import { TableToolbar } from "@/components/shared/table-toolbar";
 import { Button } from "@/components/ui/button";
@@ -27,54 +29,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
-const USERS = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    purchases: 12,
-    spent: "$450",
-    role: "user",
-    joined: "Jan 15, 2024",
-  },
-  {
-    id: "2",
-    name: "Sarah Chen",
-    email: "sarah@example.com",
-    purchases: 34,
-    spent: "$1,290",
-    role: "user",
-    joined: "Feb 3, 2024",
-  },
-  {
-    id: "3",
-    name: "Mike Wilson",
-    email: "mike@example.com",
-    purchases: 8,
-    spent: "$320",
-    role: "user",
-    joined: "Mar 12, 2024",
-  },
-  {
-    id: "4",
-    name: "Admin User",
-    email: "admin@overlay.com",
-    purchases: 0,
-    spent: "$0",
-    role: "admin",
-    joined: "Jan 1, 2024",
-  },
-  {
-    id: "5",
-    name: "Support Staff",
-    email: "support@overlay.com",
-    purchases: 0,
-    spent: "$0",
-    role: "staff",
-    joined: "Jan 5, 2024",
-  },
-];
+import { api } from "../../../../convex/_generated/api";
 
 const roleConfig = {
   user: {
@@ -94,45 +49,54 @@ const roleConfig = {
   },
 } as const;
 
-const USER_METRICS = [
-  {
-    title: "Total Users",
-    value: USERS.length.toString(),
-    change: "All registered",
-    changeType: "neutral" as const,
-    icon: Users,
-  },
-  {
-    title: "Customers",
-    value: USERS.filter((u) => u.role === "user").length.toString(),
-    change: "Active buyers",
-    changeType: "positive" as const,
-    icon: ShoppingBag,
-  },
-  {
-    title: "Staff Members",
-    value: USERS.filter((u) => u.role === "staff").length.toString(),
-    change: "Support team",
-    changeType: "neutral" as const,
-    icon: UserCog,
-  },
-  {
-    title: "Admins",
-    value: USERS.filter((u) => u.role === "admin").length.toString(),
-    change: "Platform admins",
-    changeType: "neutral" as const,
-    icon: Shield,
-  },
-];
+function formatDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export default function AdminUsersPage() {
   const [searchValue, setSearchValue] = useState("");
+  const users = useQuery(api.profiles.getAllUsers) ?? [];
 
-  const filteredUsers = USERS.filter(
+  const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+      (user.name?.toLowerCase() ?? "").includes(searchValue.toLowerCase()) ||
       user.email.toLowerCase().includes(searchValue.toLowerCase())
   );
+
+  const userMetrics = [
+    {
+      title: "Total Users",
+      value: users.length.toString(),
+      change: "All registered",
+      changeType: "neutral" as const,
+      icon: Users,
+    },
+    {
+      title: "Customers",
+      value: users.filter((u) => u.role === "user").length.toString(),
+      change: "Active buyers",
+      changeType: "positive" as const,
+      icon: ShoppingBag,
+    },
+    {
+      title: "Staff Members",
+      value: users.filter((u) => u.role === "staff").length.toString(),
+      change: "Support team",
+      changeType: "neutral" as const,
+      icon: UserCog,
+    },
+    {
+      title: "Admins",
+      value: users.filter((u) => u.role === "admin").length.toString(),
+      change: "Platform admins",
+      changeType: "neutral" as const,
+      icon: Shield,
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -143,10 +107,10 @@ export default function AdminUsersPage() {
             Manage all users on the platform.
           </p>
         </div>
-        <Button>Add User</Button>
+        <InviteRoleDialog />
       </div>
 
-      <StatsGrid metrics={USER_METRICS} />
+      <StatsGrid metrics={userMetrics} />
 
       <Card className="overflow-hidden p-0">
         <TableToolbar
@@ -160,80 +124,86 @@ export default function AdminUsersPage() {
           <TableHeader>
             <TableRow className="border-border/30 hover:bg-transparent">
               <TableHead className="h-11 font-medium text-xs">User</TableHead>
-              <TableHead className="h-11 text-right font-medium text-xs">
-                Purchases
-              </TableHead>
-              <TableHead className="h-11 text-right font-medium text-xs">
-                Total Spent
-              </TableHead>
               <TableHead className="h-11 font-medium text-xs">Role</TableHead>
               <TableHead className="h-11 font-medium text-xs">Joined</TableHead>
               <TableHead className="h-11 w-12" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => {
-              const role = roleConfig[user.role as keyof typeof roleConfig];
-              return (
-                <TableRow
-                  className="border-border/20 transition-colors hover:bg-muted/50"
-                  key={user.id}
+            {filteredUsers.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  className="py-8 text-center text-muted-foreground"
+                  colSpan={4}
                 >
-                  <TableCell className="py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-9 items-center justify-center rounded-full bg-primary-violet font-medium text-sm text-white">
-                        {user.name.charAt(0)}
+                  {users.length === 0 ? "No users found" : "No matching users"}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredUsers.map((user) => {
+                const role =
+                  roleConfig[user.role as keyof typeof roleConfig] ??
+                  roleConfig.user;
+                return (
+                  <TableRow
+                    className="border-border/20 transition-colors hover:bg-muted/50"
+                    key={user._id}
+                  >
+                    <TableCell className="py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 items-center justify-center rounded-full bg-primary-violet font-medium text-sm text-white">
+                          {(user.name ?? user.email).charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          <p className="font-medium text-foreground text-sm">
+                            {user.name ?? "Unnamed User"}
+                          </p>
+                          <p className="text-muted-foreground text-xs">
+                            {user.email}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex flex-col gap-0.5">
-                        <p className="font-medium text-foreground text-sm">
-                          {user.name}
-                        </p>
-                        <p className="text-muted-foreground text-xs">
-                          {user.email}
-                        </p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-4 text-right text-muted-foreground tabular-nums">
-                    {user.purchases}
-                  </TableCell>
-                  <TableCell className="py-4 text-right font-semibold tabular-nums">
-                    {user.spent}
-                  </TableCell>
-                  <TableCell className="py-4">
-                    <span
-                      className={cn(
-                        "inline-flex items-center rounded-full border px-2.5 py-1 font-medium text-xs capitalize",
-                        role.bg,
-                        role.text,
-                        role.border
-                      )}
-                    >
-                      {user.role}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-4 text-muted-foreground">
-                    {user.joined}
-                  </TableCell>
-                  <TableCell className="py-4">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button className="size-8" size="icon" variant="ghost">
-                          <MoreHorizontal className="size-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View details</DropdownMenuItem>
-                        <DropdownMenuItem>Change role</DropdownMenuItem>
-                        <DropdownMenuItem className="text-error-red">
-                          Suspend user
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full border px-2.5 py-1 font-medium text-xs capitalize",
+                          role.bg,
+                          role.text,
+                          role.border
+                        )}
+                      >
+                        {user.role}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-4 text-muted-foreground">
+                      {formatDate(user.createdAt)}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            aria-label="User actions"
+                            className="size-8"
+                            size="icon"
+                            variant="ghost"
+                          >
+                            <MoreHorizontal className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>View details</DropdownMenuItem>
+                          <DropdownMenuItem>Change role</DropdownMenuItem>
+                          <DropdownMenuItem className="text-error-red">
+                            Suspend user
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
           </TableBody>
         </Table>
       </Card>

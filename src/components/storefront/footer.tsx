@@ -3,8 +3,8 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const FOOTER_LINKS = {
   Product: [
-    { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Features", href: "/features" },
+    { label: "Pricing", href: "/pricing" },
     { label: "Examples", href: "/store/designstudio" },
   ],
   Company: [

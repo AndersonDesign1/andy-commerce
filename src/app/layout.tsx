@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flik - Sell Digital Products",
+  title: "Flik | The fastest way to sell digital goods",
   description:
     "The creator-friendly platform for selling digital products, memberships, and services.",
 };

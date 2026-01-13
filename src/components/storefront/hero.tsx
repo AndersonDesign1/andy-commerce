@@ -39,7 +39,7 @@ export function Hero() {
             className="h-12 rounded-full px-8 font-medium"
             size="lg"
           >
-            <Link href="/onboarding">Launch your store</Link>
+            <Link href="/signup">Launch your store</Link>
           </Button>
           <Button
             asChild

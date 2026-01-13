@@ -30,7 +30,7 @@ const PLANS = [
     description: "Perfect for new creators launching their first products.",
     price: "$0",
     period: "/month",
-    fee: "9% per transaction",
+    fee: "7% per transaction",
     features: [
       "Unlimited products",
       "Secure checkout",
@@ -40,7 +40,7 @@ const PLANS = [
       "Standard payouts",
     ],
     cta: "Start Selling for Free",
-    href: "/onboarding",
+    href: "/signup",
     popular: false,
     color: "violet",
   },
@@ -64,7 +64,7 @@ const PLANS = [
     ],
 
     cta: "Start 14-day Free Trial",
-    href: "/onboarding",
+    href: "/signup",
     popular: true,
     color: "magenta",
   },
@@ -76,7 +76,6 @@ const PLANS = [
     fee: "3% per transaction",
     features: [
       "Everything in Pro",
-      "Custom domain support",
       "Team member access",
       "API & Webhook access",
       "Dedicated account manager",
@@ -85,7 +84,7 @@ const PLANS = [
       "Early access to new features",
     ],
     cta: "Scale Your Business",
-    href: "/onboarding",
+    href: "/signup",
     popular: false,
     color: "dark",
   },
@@ -97,7 +96,6 @@ const FEATURES_COMPARISON = [
     features: [
       {
         name: "Unlimited Products",
-
         description:
           "List as many products as you want without any restrictions.",
         starter: true,
@@ -107,7 +105,7 @@ const FEATURES_COMPARISON = [
       {
         name: "Secure Checkout",
         description:
-          "Lighthing-fast, optimized checkout experience for your customers.",
+          "Lightning-fast, optimized checkout experience for your customers.",
         starter: true,
         pro: true,
         business: true,

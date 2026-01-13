@@ -47,7 +47,7 @@ export default function HowItWorksPage() {
             className="h-12 rounded-full px-8 text-base"
             size="lg"
           >
-            <Link href="/onboarding">Launch your store</Link>
+            <Link href="/signup">Launch your store</Link>
           </Button>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function HowItWorksPage() {
                   className="h-12 rounded-full px-8 font-medium"
                   variant="outline"
                 >
-                  <Link className="flex items-center gap-2" href="/onboarding">
+                  <Link className="flex items-center gap-2" href="/signup">
                     Get started for free <ArrowRight className="size-4" />
                   </Link>
                 </Button>

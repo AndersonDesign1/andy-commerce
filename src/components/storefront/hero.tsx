@@ -23,13 +23,13 @@ export function Hero() {
 
         <div className="flex w-full flex-col gap-6">
           <h1 className="font-bold text-4xl text-foreground tracking-tight sm:text-5xl lg:text-6xl">
-            The platform for{" "}
-            <span className="text-primary-violet">digital creators</span>
+            Sell your digital products in a{" "}
+            <span className="text-primary-violet">Flik.</span>
           </h1>
 
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground lg:text-xl">
-            Sell digital products, memberships, and services with the most
-            creator-friendly platform. No monthly fees. Just 5% per transaction.
+            A simplified platform designed to help you launch your store before
+            your coffee gets cold.
           </p>
         </div>
 
@@ -39,7 +39,7 @@ export function Hero() {
             className="h-12 rounded-full px-8 font-medium"
             size="lg"
           >
-            <Link href="/onboarding">Start selling today</Link>
+            <Link href="/signup">Launch your store</Link>
           </Button>
           <Button
             asChild
@@ -47,7 +47,7 @@ export function Hero() {
             size="lg"
             variant="outline"
           >
-            <Link href="#how-it-works">See how it works</Link>
+            <Link href="/how-it-works">How Flik works</Link>
           </Button>
         </div>
 

@@ -12,11 +12,12 @@ import {
 const FEATURES = [
   {
     icon: Zap,
-    title: "Instant Payouts",
+    title: "Flik-Speed Payouts",
     description:
       "Get paid within 24 hours. No more waiting weeks for your money.",
     className: "md:col-span-1 md:row-span-1",
   },
+
   {
     icon: LayoutDashboard,
     title: "Beautiful Dashboard",

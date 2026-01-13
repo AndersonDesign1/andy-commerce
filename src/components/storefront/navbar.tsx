@@ -75,13 +75,20 @@ export function Navbar() {
           </Link>
           <Link
             className="font-medium text-muted-foreground text-sm transition-colors hover:text-foreground"
-            href="#features"
+            href="/features"
           >
             Features
           </Link>
           <Link
             className="font-medium text-muted-foreground text-sm transition-colors hover:text-foreground"
-            href="#pricing"
+            href="/how-it-works"
+          >
+            How it works
+          </Link>
+
+          <Link
+            className="font-medium text-muted-foreground text-sm transition-colors hover:text-foreground"
+            href="/pricing"
           >
             Pricing
           </Link>
@@ -174,7 +181,7 @@ export function Navbar() {
                   Log in
                 </Link>
                 <Button asChild className="rounded-full px-5" size="sm">
-                  <Link href="/onboarding">Get Started</Link>
+                  <Link href="/signup">Get Started</Link>
                 </Button>
               </>
             )}
@@ -201,14 +208,21 @@ export function Navbar() {
                   </Link>
                   <Link
                     className="font-medium text-lg text-muted-foreground"
-                    href="#features"
+                    href="/features"
                     onClick={() => setIsOpen(false)}
                   >
                     Features
                   </Link>
                   <Link
                     className="font-medium text-lg text-muted-foreground"
-                    href="#pricing"
+                    href="/how-it-works"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    How it works
+                  </Link>
+                  <Link
+                    className="font-medium text-lg text-muted-foreground"
+                    href="/pricing"
                     onClick={() => setIsOpen(false)}
                   >
                     Pricing
@@ -265,7 +279,7 @@ export function Navbar() {
                         className="h-12 w-full rounded-xl"
                         onClick={() => setIsOpen(false)}
                       >
-                        <Link href="/onboarding">Get Started</Link>
+                        <Link href="/signup">Get Started</Link>
                       </Button>
                     </>
                   )}

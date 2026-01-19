@@ -22,8 +22,6 @@ const PLANS = [
   { key: "business", name: "Business" },
 ] as const;
 
-type PlanKey = (typeof PLANS)[number]["key"];
-
 interface Feature {
   name: string;
   description: string;
@@ -316,84 +314,84 @@ function DesktopComparisonTable() {
         <TableHeader>
           <TableRow className="border-border border-b-2 hover:bg-transparent">
             <TableHead className="w-[280px] py-10 font-bold text-foreground text-xl">
-                Features
-              </TableHead>
-              <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
-                Starter
-              </TableHead>
-              <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
-                Pro
-              </TableHead>
-              <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
-                Business
-              </TableHead>
+              Features
+            </TableHead>
+            <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
+              Starter
+            </TableHead>
+            <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
+              Pro
+            </TableHead>
+            <TableHead className="w-[120px] py-10 text-center font-bold text-foreground text-xl">
+              Business
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        {FEATURES_COMPARISON.map((section) => (
+          <TableBody key={section.category}>
+            <TableRow className="hover:bg-transparent">
+              <TableCell
+                className="px-2 py-16 font-bold text-primary-violet text-sm uppercase tracking-[0.2em]"
+                colSpan={4}
+              >
+                {section.category}
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          {FEATURES_COMPARISON.map((section) => (
-            <TableBody key={section.category}>
-              <TableRow className="hover:bg-transparent">
-                <TableCell
-                  className="px-2 py-16 font-bold text-primary-violet text-sm uppercase tracking-[0.2em]"
-                  colSpan={4}
-                >
-                  {section.category}
+            {section.features.map((feature) => (
+              <TableRow
+                className="border-border border-b transition-colors hover:bg-muted/5"
+                key={feature.name}
+              >
+                <TableCell className="py-12 pr-6">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-foreground text-lg">
+                      {feature.name}
+                    </span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            className="inline-flex cursor-help items-center text-muted-foreground/50 transition-colors hover:text-muted-foreground"
+                            type="button"
+                          >
+                            <HelpCircle className="size-4" />
+                            <span className="sr-only">
+                              Explain {feature.name}
+                            </span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          className="max-w-[200px] border bg-popover text-center text-popover-foreground shadow-sm"
+                          sideOffset={8}
+                        >
+                          <p>{feature.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </TableCell>
+
+                <TableCell className="py-12 text-center">
+                  <div className="flex justify-center">
+                    <FeatureValue value={feature.starter} />
+                  </div>
+                </TableCell>
+                <TableCell className="py-12 text-center">
+                  <div className="flex justify-center">
+                    <FeatureValue value={feature.pro} />
+                  </div>
+                </TableCell>
+                <TableCell className="py-12 text-center">
+                  <div className="flex justify-center">
+                    <FeatureValue value={feature.business} />
+                  </div>
                 </TableCell>
               </TableRow>
-              {section.features.map((feature) => (
-                <TableRow
-                  className="border-border border-b transition-colors hover:bg-muted/5"
-                  key={feature.name}
-                >
-                  <TableCell className="py-12 pr-6">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-foreground text-lg">
-                        {feature.name}
-                      </span>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              className="inline-flex cursor-help items-center text-muted-foreground/50 transition-colors hover:text-muted-foreground"
-                              type="button"
-                            >
-                              <HelpCircle className="size-4" />
-                              <span className="sr-only">
-                                Explain {feature.name}
-                              </span>
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className="max-w-[200px] border bg-popover text-center text-popover-foreground shadow-sm"
-                            sideOffset={8}
-                          >
-                            <p>{feature.description}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="py-12 text-center">
-                    <div className="flex justify-center">
-                      <FeatureValue value={feature.starter} />
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-12 text-center">
-                    <div className="flex justify-center">
-                      <FeatureValue value={feature.pro} />
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-12 text-center">
-                    <div className="flex justify-center">
-                      <FeatureValue value={feature.business} />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          ))}
-        </Table>
-      </div>
+            ))}
+          </TableBody>
+        ))}
+      </Table>
+    </div>
   );
 }
 

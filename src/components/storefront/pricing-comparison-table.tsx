@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, HelpCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -214,14 +215,14 @@ function FeatureValue({
 }) {
   if (typeof value === "boolean") {
     return value ? (
-      <Check className={`size-4 text-primary-violet md:size-5 ${className}`} />
+      <Check className={cn("size-4 text-primary-violet md:size-5", className)} />
     ) : (
       <span className="text-muted-foreground/50">—</span>
     );
   }
   return (
     <span
-      className={`font-medium text-foreground text-xs md:text-sm ${className}`}
+      className={cn("font-medium text-foreground text-xs md:text-sm", className)}
     >
       {value}
     </span>
@@ -295,7 +296,13 @@ function MobileComparisonTable() {
                   <span className="text-muted-foreground text-sm">
                     {plan.name}
                   </span>
-                  <MobileFeatureValue value={feature[plan.key]} />
+                  <MobileFeatureValue
+                    value={
+                      feature[
+                        plan.key as keyof Omit<Feature, "name" | "description">
+                      ]
+                    }
+                  />
                 </div>
               ))}
             </div>

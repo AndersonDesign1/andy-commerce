@@ -1,5 +1,16 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import {
+  createStaggerContainer,
+  DURATION,
+  EASING,
+  ENTRANCE_VARIANTS,
+  STAGGERS,
+} from "@/lib/design-system";
 
 const CATEGORIES = [
   {
@@ -61,43 +72,103 @@ const CATEGORIES = [
 ];
 
 export default function CategoriesPage() {
+  const { ref: headerRef, isInView: headerInView } = useScrollReveal({
+    threshold: 0.3,
+  });
+  const { ref: gridRef, isInView: gridInView } = useScrollReveal({
+    threshold: 0.1,
+  });
+
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <h1 className="mb-4 font-bold text-4xl text-gray-900">
-          Browse Categories
-        </h1>
-        <p className="mx-auto max-w-xl text-gray-600 text-lg">
-          Discover thousands of digital products from talented creators around
-          the world.
-        </p>
+    <section className="relative w-full overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+      {/* Background gradient */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <motion.div
+          animate={{ opacity: 1, scale: 1 }}
+          className="absolute top-0 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-gradient-to-b from-primary-violet-100/40 to-transparent blur-3xl"
+          initial={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: DURATION.hero, ease: EASING.outExpo }}
+        />
       </div>
 
-      {/* Categories Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {CATEGORIES.map((category) => (
-          <Link
-            className="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:bg-primary-violet-50"
-            href={`/categories/${category.slug}`}
-            key={category.slug}
+      <div className="mx-auto max-w-6xl">
+        {/* Header */}
+        <motion.div
+          animate={headerInView ? "visible" : "hidden"}
+          className="mb-16 text-center"
+          initial="hidden"
+          ref={headerRef}
+          variants={createStaggerContainer(STAGGERS.section, 0)}
+        >
+          <motion.span
+            className="mb-4 inline-block rounded-full border border-border bg-card px-3 py-1 font-medium text-muted-foreground text-sm"
+            variants={ENTRANCE_VARIANTS.slideDown}
           >
-            <div aria-hidden="true" className="mb-4 text-4xl">
-              {category.icon}
-            </div>
-            <h2 className="mb-1 font-semibold text-gray-900 text-lg group-hover:text-gray-700">
-              {category.name}
-            </h2>
-            <p className="mb-4 text-gray-500 text-sm">{category.description}</p>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">
-                {category.count} products
-              </span>
-              <ArrowRight className="h-4 w-4 text-gray-400 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-        ))}
+            Explore Categories
+          </motion.span>
+          <motion.h1
+            className="mb-4 font-bold text-4xl text-foreground tracking-tight"
+            variants={ENTRANCE_VARIANTS.slideUp}
+          >
+            Browse Categories
+          </motion.h1>
+          <motion.p
+            className="mx-auto max-w-xl text-lg text-muted-foreground"
+            variants={ENTRANCE_VARIANTS.fade}
+          >
+            Discover thousands of digital products from talented creators around
+            the world.
+          </motion.p>
+        </motion.div>
+
+        {/* Categories Grid */}
+        <motion.div
+          animate={gridInView ? "visible" : "hidden"}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+          initial="hidden"
+          ref={gridRef}
+          variants={createStaggerContainer(STAGGERS.default, 0)}
+        >
+          {CATEGORIES.map((category, index) => (
+            <motion.div
+              key={category.slug}
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: DURATION.entrance,
+                    ease: EASING.outExpo,
+                    delay: index * STAGGERS.fast,
+                  },
+                },
+              }}
+            >
+              <Link
+                className="group block h-full rounded-2xl border border-border bg-card p-6 transition-all hover:bg-primary-violet-50 dark:hover:bg-primary-violet-50/10"
+                href={`/categories/${category.slug}`}
+              >
+                <div aria-hidden="true" className="mb-4 text-4xl">
+                  {category.icon}
+                </div>
+                <h2 className="mb-1 font-semibold text-foreground text-lg group-hover:text-primary-violet">
+                  {category.name}
+                </h2>
+                <p className="mb-4 text-muted-foreground text-sm">
+                  {category.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm">
+                    {category.count} products
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-primary-violet" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 }
